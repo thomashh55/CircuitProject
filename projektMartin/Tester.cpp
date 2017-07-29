@@ -67,15 +67,17 @@ void ATester::BeginPlay()
 	iret = ngspice->Command("circbyline R1 1 2 3");
 	iret = ngspice->Command("circbyline R2 2 3 10");
 	iret = ngspice->Command("circbyline R3 3 0 5");
+	//iret = ngspice->Command("circbyline .tran 1 20 uic");
+	//iret = ngspice->Command("circbyline .dc v1 5 15 1");
 	iret = ngspice->Command("circbyline .end");*/
 
 	// Parallel ampermeter test
 	/*iret = ngspice->Command("circbyline ampermeter test");
 	iret = ngspice->Command("circbyline V1 0 1 20");
 	iret = ngspice->Command("circbyline V2 1 2 0");
-	iret = ngspice->Command("circbyline R1 2 3 1");
+	//iret = ngspice->Command("circbyline R1 2 3 1");
 	iret = ngspice->Command("circbyline V3 1 4 0");
-	iret = ngspice->Command("circbyline R2 4 3 1");
+	//iret = ngspice->Command("circbyline R2 4 3 1");
 	iret = ngspice->Command("circbyline R3 3 0 10");
 	iret = ngspice->Command("circbyline .end");*/
 
@@ -84,7 +86,7 @@ void ATester::BeginPlay()
 	ngspice->Command("circbyline V1 1 0 1");
 	ngspice->Command("circbyline R1 1 2 1");
 	ngspice->Command("circbyline C1 2 0 1 ic=0");
-	ngspice->Command("circbyline .tran 1 3 uic");
+	ngspice->Command("circbyline .tran 100000u 2 uic");
 	ngspice->Command("circbyline .end");
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Commands executed"));
@@ -131,13 +133,13 @@ void ATester::PressedO()
 void ATester::PressedP()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: P Pressed"));
-	int8 iret = ngspice->Command("destroy");
+	int8 iret = ngspice->Command("reset");
 }
 
 void ATester::PressedG()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: G Pressed"));
-	int8 iret = ngspice->Command("print v(1,2) v(2,3) v(3)");
+	int8 iret = ngspice->Command("setscale");
 }
 
 void ATester::PressedH()
@@ -147,7 +149,7 @@ void ATester::PressedH()
 	char **plots = ngspice->GetAllPlots();
 	int8 i = 0;
 	while (plots[i] != NULL) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Vec %d: %s"), i, *FString(plots[i]));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Plot %d: %s"), i, *FString(plots[i]));
 		i++;
 	}
 }
@@ -169,36 +171,46 @@ void ATester::PressedJ()
 void ATester::PressedK()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: K Pressed"));
-	int8 iret = ngspice->Command("op");
+	int8 iret = ngspice->Command("destroy");
 }
 
 void ATester::PressedL()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: L Pressed"));
-	int8 iret = ngspice->Command("tran 1 3 uic");
+	ngspice->GetVecInfo("V(2)");
 }
+
+double time = 0;
 
 void ATester::PressedC()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: C Pressed"));
+	time = 1;
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Time reset: %f"), time);
 }
 
 void ATester::PressedV()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: V Pressed"));
+	ngspice->SetBreakpoint(time);
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Time set: %f"), time);
+	time += 1.0f;
 }
 
 void ATester::PressedB()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: B Pressed"));
+	int8 iret = ngspice->Command("op");
 }
 
 void ATester::PressedN()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: N Pressed"));
+	int8 iret = ngspice->Command("dc v1 5 15 1");
 }
 
 void ATester::PressedM()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: M Pressed"));
+	int8 iret = ngspice->Command("tran 100000u 2 uic");
 }

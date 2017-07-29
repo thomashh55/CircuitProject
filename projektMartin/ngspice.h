@@ -33,10 +33,7 @@ public:
     NGSPICE();
     virtual ~NGSPICE();
 
-	void SetReporter(AReporter* aReporter)
-	{
-		reporter = aReporter;
-	}
+	void SetReporter(AReporter *reporter);
 
     int Init();
 	int Command(char *cmd);
@@ -46,6 +43,7 @@ public:
 	char **GetAllPlots();
 	char **GetAllVecs(char* plotname);
 	bool IsRunning();
+	bool SetBreakpoint(double time);
 
 private:
     static int cbSendChar(char *what, int id, void *user);
@@ -55,5 +53,5 @@ private:
 	static int cbSendInitData(pvecinfoall what, int id, void *user);
     static int cbBGThreadRunning(bool is_running, int id, void *user);
 
-	AReporter* reporter;
+	AReporter* m_reporter;
 };
