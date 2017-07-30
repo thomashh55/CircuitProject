@@ -12,7 +12,7 @@ AComponent::AComponent()
 
 }
 
-// Setters and Getters
+// Getters and Setters
 FString AComponent::GetId()
 {
 	return m_id;

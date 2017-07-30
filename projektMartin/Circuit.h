@@ -2,8 +2,10 @@
 
 #pragma once
 
-#include "Component.h"
 #include "CircNode.h"
+#include "Component.h"
+#include "Resistor.h"
+#include "VoltageSource.h"
 #include "GameFramework/Actor.h"
 #include "Circuit.generated.h"
 
@@ -17,15 +19,15 @@ public:
 	ACircuit();
 
 	// Getters and Setters
-	int32 GetComponentCounter();
+	/*int32 GetComponentCounter();
 	void SetComponentCounter(int32 componentCounter);
 	int32 GetCircNodeCounter();
 	void SetCircNodeCounter(int32 circNodeCounter);
-	/*TArray<AComponent> GetComponentArray();
-	void SetComponentArray(TArray<AComponent> componentArray);
-	TArray<ACircNode> GetCircNodeArray();
-	void SetCircNodeArray(TArray<ACircNode> circNodeArray);*/
-
+	TArray<AComponent*> GetComponentArray();
+	void SetComponentArray(TArray<AComponent*> componentArray);
+	TArray<ACircNode*> GetCircNodeArray();
+	void SetCircNodeArray(TArray<ACircNode*> circNodeArray);*/
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,13 +36,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Create circuit
+	virtual void AddComponent(AComponent *component);
+	
 	// Simulation commands
 	virtual void Start();
 
 private:
 	int32 m_componentCounter;
 	int32 m_circNodeCounter;
-	/*TArray<AComponent> m_componentArray;
-	TArray<ACircNode> m_circNodeArray;*/
+	TArray<AComponent*> m_componentArray;
+	TArray<ACircNode*> m_circNodeArray;
 	
 };

@@ -46,7 +46,6 @@ void NGSPICE::SetReporter(AReporter *reporter)
 	m_reporter = reporter;
 }
 
-
 int NGSPICE::Init()
 {
     setlocale( LC_ALL, "C" );
@@ -55,7 +54,6 @@ int NGSPICE::Init()
 	return iret;
 }
 
-
 int NGSPICE::Command(char *cmd)
 {
 	setlocale(LC_ALL, "C");
@@ -63,7 +61,6 @@ int NGSPICE::Command(char *cmd)
 	setlocale(LC_ALL, "");
 	return iret;
 }
-
 
 void NGSPICE::GetVecInfo(char *vecname)
 {
@@ -81,7 +78,7 @@ void NGSPICE::GetVecInfo(char *vecname)
 			m_reporter->Report("V_realdata " + FString::FromInt(i) + ": Value: " + FString::SanitizeFloat(vi->v_realdata[i]));
 			/*reporter->Report("V_compdata " + FString::FromInt(i) +
 				": Cx_real: " + FString::SanitizeFloat(vi->v_compdata[i].cx_real) +
-				" Cx_imag: " + FString::SanitizeFloat(vi->v_compdata[i].cx_imag));*/
+				" Cx_imag: " + FString::SanitizeFloat(vi->v_compdata[i].cx_imag));*/ // Crashes otherwise
 		}
 		m_reporter->Report(" ");
 	}
@@ -89,7 +86,6 @@ void NGSPICE::GetVecInfo(char *vecname)
 		m_reporter->Report("GetVecInfo: NULL");
 	}
 }
-
 
 int NGSPICE::LoadCirc(char **circarray)
 {
@@ -99,7 +95,6 @@ int NGSPICE::LoadCirc(char **circarray)
 	return iret;
 }
 
-
 char *NGSPICE::GetPlotName()
 {
 	setlocale(LC_ALL, "C");
@@ -107,7 +102,6 @@ char *NGSPICE::GetPlotName()
 	setlocale(LC_ALL, "");
 	return name;
 }
-
 
 char **NGSPICE::GetAllPlots()
 {
@@ -117,7 +111,6 @@ char **NGSPICE::GetAllPlots()
 	return plots;
 }
 
-
 char **NGSPICE::GetAllVecs(char* plotname)
 {
 	setlocale(LC_ALL, "C");
@@ -125,7 +118,6 @@ char **NGSPICE::GetAllVecs(char* plotname)
 	setlocale(LC_ALL, "");
 	return vecs;
 }
-
 
 bool NGSPICE::IsRunning()
 {
@@ -135,7 +127,6 @@ bool NGSPICE::IsRunning()
 	return bIsRunning;
 }
 
-
 bool NGSPICE::SetBreakpoint(double time)
 {
 	setlocale(LC_ALL, "C");
@@ -143,7 +134,6 @@ bool NGSPICE::SetBreakpoint(double time)
 	setlocale(LC_ALL, "");
 	return bIsSet;
 }
-
 
 int NGSPICE::cbSendChar(char *what, int id, void *user)
 {
@@ -153,7 +143,6 @@ int NGSPICE::cbSendChar(char *what, int id, void *user)
     return 0;
 }
 
-
 int NGSPICE::cbSendStat(char *what, int id, void *user)
 {
     NGSPICE* ngspice = reinterpret_cast<NGSPICE*>(user);
@@ -161,7 +150,6 @@ int NGSPICE::cbSendStat(char *what, int id, void *user)
 		" Id: " + FString::FromInt(id));
     return 0;
 }
-
 
 int NGSPICE::cbControlledExit(int status, bool immediate, bool exit_upon_quit, int id, void *user)
 {
@@ -173,7 +161,6 @@ int NGSPICE::cbControlledExit(int status, bool immediate, bool exit_upon_quit, i
 	return 0;
 }
 
-
 int NGSPICE::cbSendData(pvecvaluesall what, int num, int id, void *user)
 {
 	NGSPICE* ngspice = reinterpret_cast<NGSPICE*>(user);
@@ -183,15 +170,14 @@ int NGSPICE::cbSendData(pvecvaluesall what, int num, int id, void *user)
 	for (int i = 0; i < what->veccount; i++) {
 		ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Name: " + FString(what->vecsa[i]->name));
 		ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Creal: " + FString::SanitizeFloat(what->vecsa[i]->creal));
-		ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Cimag: " + FString::SanitizeFloat(what->vecsa[i]->cimag));
+		/*ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Cimag: " + FString::SanitizeFloat(what->vecsa[i]->cimag));
 		ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Is_scale: " + FString(what->vecsa[i]->is_scale ? "true" : "false"));
-		ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Is_complex: " + FString(what->vecsa[i]->is_complex ? "true" : "false"));
+		ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Is_complex: " + FString(what->vecsa[i]->is_complex ? "true" : "false"));*/
 	}
 	ngspice->m_reporter->Report("Id: " + FString::FromInt(id));
 	ngspice->m_reporter->Report(" ");
 	return 0;
 }
-
 
 int NGSPICE::cbSendInitData(pvecinfoall what, int id, void *user)
 {
@@ -211,7 +197,6 @@ int NGSPICE::cbSendInitData(pvecinfoall what, int id, void *user)
 	ngspice->m_reporter->Report(" ");
 	return 0;
 }
-
 
 int NGSPICE::cbBGThreadRunning(bool is_running, int id, void *user)
 {

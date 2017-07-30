@@ -43,6 +43,7 @@ void ATester::BeginPlay()
 	// Create ngSpice
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating"));
 	ngspice = new NGSPICE();
+	circuit = GetWorld()->SpawnActor<ACircuit>(ACircuit::StaticClass());
 
 	// Assign reporter
 	reporter = GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass());
@@ -81,13 +82,28 @@ void ATester::BeginPlay()
 	iret = ngspice->Command("circbyline R3 3 0 10");
 	iret = ngspice->Command("circbyline .end");*/
 
+	// Schema 1
+	iret = ngspice->Command("circbyline schema 1");
+	iret = ngspice->Command("circbyline V1 1 0 9");
+	//iret = ngspice->Command("circbyline D2 1 2");
+	//iret = ngspice->Command("circbyline D3 1 3");
+	iret = ngspice->Command("circbyline R4 1 4 100"); //2 4
+	iret = ngspice->Command("circbyline R5 1 5 100");
+	iret = ngspice->Command("circbyline R6 1 6 100");
+	iret = ngspice->Command("circbyline R7 1 7 100"); //3 7
+	iret = ngspice->Command("circbyline C8 4 5 1000U ic=1V");
+	iret = ngspice->Command("circbyline C9 7 6 1000U");
+	iret = ngspice->Command("circbyline Q10 4 6 0");
+	iret = ngspice->Command("circbyline Q11 7 5 0");
+	iret = ngspice->Command("circbyline .end");
+
 	// By Tomas
-	ngspice->Command("circbyline test array");
+	/*ngspice->Command("circbyline test array");
 	ngspice->Command("circbyline V1 1 0 1");
 	ngspice->Command("circbyline R1 1 2 1");
 	ngspice->Command("circbyline C1 2 0 1 ic=0");
-	ngspice->Command("circbyline .tran 100000u 2 uic");
-	ngspice->Command("circbyline .end");
+	ngspice->Command("circbyline .tran 0.1 2 uic");
+	ngspice->Command("circbyline .end");*/
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Commands executed"));
 
@@ -212,5 +228,5 @@ void ATester::PressedN()
 void ATester::PressedM()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: M Pressed"));
-	int8 iret = ngspice->Command("tran 100000u 2 uic");
+	int8 iret = ngspice->Command("tran 0.1 2 uic");
 }

@@ -4,20 +4,16 @@
 
 #include "Component.h"
 #include "GameFramework/Actor.h"
-#include "Resistor.generated.h"
+#include "Transistor.generated.h"
 
 UCLASS()
-class NEWTONPROJECT_API AResistor : public AComponent
+class NEWTONPROJECT_API ATransistor : public AComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AResistor();
-
-	// Getters and Setters
-	double GetResistance();
-	void SetResistance(double m_resistance);
+	ATransistor();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,7 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-private:
-	double m_resistance;
-
+	
+	
 };

@@ -4,6 +4,7 @@
 
 #include "ngspice.h"
 #include "Reporter.h"
+#include "Circuit.h"
 #include "GameFramework/Actor.h"
 #include "Tester.generated.h"
 
@@ -47,6 +48,7 @@ public:
 
 private:
 	NGSPICE *ngspice;
+	ACircuit *circuit;
 	AReporter *reporter;
 
 };

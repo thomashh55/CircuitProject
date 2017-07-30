@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "NewtonProject.h"
-#include "Resistor.h"
+#include "Capacitor.h"
 
 
 // Sets default values
-AResistor::AResistor()
+ACapacitor::ACapacitor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -13,25 +13,25 @@ AResistor::AResistor()
 }
 
 // Getters and Setters
-double AResistor::GetResistance()
+double ACapacitor::GetCapacitance()
 {
-	return m_resistance;
+	return m_capacitance;
 }
 
-void AResistor::SetResistance(double resistance)
+void ACapacitor::SetCapacitance(double capacitance)
 {
-	m_resistance = resistance;
+	m_capacitance = capacitance;
 }
 
 // Called when the game starts or when spawned
-void AResistor::BeginPlay()
+void ACapacitor::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AResistor::Tick(float DeltaTime)
+void ACapacitor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

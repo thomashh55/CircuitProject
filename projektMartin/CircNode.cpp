@@ -12,7 +12,7 @@ ACircNode::ACircNode()
 
 }
 
-// Setters and Getters
+// Getters and Setters
 FString ACircNode::GetId()
 {
 	return m_id;

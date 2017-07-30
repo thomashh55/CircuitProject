@@ -12,7 +12,8 @@ ACircuit::ACircuit()
 
 }
 
-int32 ACircuit::GetComponentCounter()
+// Getters and Setters
+/*int32 ACircuit::GetComponentCounter()
 {
 	return m_componentCounter;
 }
@@ -32,22 +33,22 @@ void ACircuit::SetCircNodeCounter(int32 circNodeCounter)
 	m_circNodeCounter = circNodeCounter;
 }
 
-/*TArray<AComponent> ACircuit::GetComponentArray()
+TArray<AComponent*> ACircuit::GetComponentArray()
 {
 	return m_componentArray;
 }
 	
-void ACircuit::SetComponentArray(TArray<AComponent> componentArray)
+void ACircuit::SetComponentArray(TArray<AComponent*> componentArray)
 {
 	m_componentArray = componentArray;
 }
 
-TArray<ACircNode> ACircuit::GetCircNodeArray()
+TArray<ACircNode*> ACircuit::GetCircNodeArray()
 {
 	return m_circNodeArray;
 }
 
-void ACircuit::SetCircNodeArray(TArray<ACircNode> circNodeArray)
+void ACircuit::SetCircNodeArray(TArray<ACircNode*> circNodeArray)
 {
 	m_circNodeArray = circNodeArray;
 }*/
@@ -66,6 +67,12 @@ void ACircuit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+// Adds component to the circuit
+void ACircuit::AddComponent(AComponent *component)
+{
+	m_componentArray.Add(component);
 }
 
 // Simulation commands
