@@ -18,9 +18,9 @@ FString ACircNode::GetId()
 	return m_id;
 }
 
-void ACircNode::SetId(FString id)
+void ACircNode::SetId(int32 id)
 {
-	m_id = id;
+	m_id = FString("V(") + FString::FromInt(id) + FString(")");
 }
 
 double ACircNode::GetVoltage()

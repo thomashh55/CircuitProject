@@ -26,3 +26,8 @@ void ADiode::Tick(float DeltaTime)
 
 }
 
+FString ADiode::GetPrefix()
+{
+	return "D";
+}
+

@@ -22,5 +22,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// Returns prefix for NgSpice
+	virtual FString GetPrefix() override;
+
+private:
+	static const FString m_prefix;
 	
 };

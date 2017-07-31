@@ -16,7 +16,7 @@ public:
 
 	// Getters and Setters
 	FString GetId();
-	void SetId(FString id);
+	void SetId(int32 id);
 	double GetVoltage();
 	void SetVoltage(double voltage);
 

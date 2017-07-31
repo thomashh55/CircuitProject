@@ -12,18 +12,24 @@ AComponent::AComponent()
 
 }
 
+FString AComponent::GetPrefix()
+{
+	check(0 && "You must override this");
+	return FString();
+}
+
 // Getters and Setters
 FString AComponent::GetId()
 {
 	return m_id;
 }
 
-void AComponent::SetId(FString id)
+void AComponent::SetId(int32 id)
 {
-	m_id = id;
+	m_id = GetPrefix() + FString::FromInt(id);
 }
 
-double AComponent::GetCurrent()
+/*double AComponent::GetCurrent()
 {
 	return m_current;
 }
@@ -51,7 +57,7 @@ ACircNode *AComponent::GetNode2()
 void AComponent::SetNode2(ACircNode *node2)
 {
 	m_node2 = node2;
-}
+}*/
 
 // Called when the game starts or when spawned
 void AComponent::BeginPlay()

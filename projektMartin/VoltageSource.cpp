@@ -37,3 +37,8 @@ void AVoltageSource::Tick(float DeltaTime)
 
 }
 
+FString AVoltageSource::GetPrefix()
+{
+	return "V";
+}
+

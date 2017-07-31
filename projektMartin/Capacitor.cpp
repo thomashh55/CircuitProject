@@ -37,3 +37,8 @@ void ACapacitor::Tick(float DeltaTime)
 
 }
 
+FString ACapacitor::GetPrefix()
+{
+	return "C";
+}
+

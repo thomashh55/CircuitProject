@@ -45,6 +45,8 @@ void ATester::BeginPlay()
 	ngspice = new NGSPICE();
 	circuit = GetWorld()->SpawnActor<ACircuit>(ACircuit::StaticClass());
 
+	circuit->AddComponent(GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass()));
+
 	// Assign reporter
 	reporter = GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass());
 	ngspice->SetReporter(reporter);

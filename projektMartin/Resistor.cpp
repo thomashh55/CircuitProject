@@ -37,3 +37,8 @@ void AResistor::Tick(float DeltaTime)
 
 }
 
+FString AResistor::GetPrefix()
+{
+	return "R";
+}
+

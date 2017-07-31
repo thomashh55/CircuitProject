@@ -75,9 +75,22 @@ void ACircuit::AddComponent(AComponent *component)
 	m_componentArray.Add(component);
 }
 
+// Adds component to the circuit
+void ACircuit::AddNode(ACircNode *circNode)
+{
+	m_circNodeArray.Add(circNode);
+}
+
 // Simulation commands
 void ACircuit::Start()
 {
-
+	m_componentCounter = 0;
+	m_circNodeCounter = 0;
+	for (ACircNode *circNode : m_circNodeArray) {
+		circNode->SetId(m_circNodeCounter++);
+	}
+	for (AComponent *component : m_componentArray) {
+		component->SetId(m_componentCounter++);
+	}
 }
 

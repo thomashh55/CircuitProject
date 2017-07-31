@@ -38,6 +38,7 @@ public:
 
 	// Create circuit
 	virtual void AddComponent(AComponent *component);
+	virtual void AddNode(ACircNode *circNode);
 	
 	// Simulation commands
 	virtual void Start();

@@ -37,3 +37,8 @@ void AWire::Tick(float DeltaTime)
 
 }
 
+FString AWire::GetPrefix()
+{
+	return "V";
+}
+

@@ -26,3 +26,8 @@ void ATransistor::Tick(float DeltaTime)
 
 }
 
+FString ATransistor::GetPrefix()
+{
+	return "Q";
+}
+
