@@ -4,6 +4,8 @@
 #include "Wire.h"
 
 
+const FString AWire::m_prefix = FString("V");
+
 // Sets default values
 AWire::AWire()
 {
@@ -39,6 +41,16 @@ void AWire::Tick(float DeltaTime)
 
 FString AWire::GetPrefix()
 {
-	return "V";
+	return m_prefix;
+}
+
+FString AWire::GetCircLine()
+{
+	/*if (m_nodeArray[0] != NULL && m_nodeArray[1] != NULL) {
+		return m_id + FString(" ") +
+			FString::FromInt(m_nodeArray[0]->GetId()) + FString(" ") +
+			FString::FromInt(m_nodeArray[1]->GetId()) + FString(" 0");
+	}*/
+	return FString();
 }
 

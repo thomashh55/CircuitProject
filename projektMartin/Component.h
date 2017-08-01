@@ -16,16 +16,11 @@ public:
 	AComponent();
 
 	// Getters and Setters
-	FString GetId();
-	void SetId(int32 id);
 	/*double GetCurrent();
-	void SetCurrent(double current);
-	ACircNode *GetNode1();
-	void SetNode1(ACircNode *node1);
-	ACircNode *GetNode2();
-	void SetNode2(ACircNode *node2);*/
+	void SetCurrent(double current);*/
+	TArray<ACircNode*> *GetNodeArray();
 
-//protected:
+protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -33,13 +28,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Returns prefix for NgSpice
+	// Getter and setter for component identifier
+	void SetId(int32 id);
 	virtual FString GetPrefix();
 
-private:
+	// Returns line for NgSpice
+	virtual FString GetCircLine();
+
+protected:
 	FString m_id;
 	double m_current;
-	ACircNode *m_node1;
-	ACircNode *m_node2;
-
+	TArray<ACircNode*> *m_nodeArray;
+	
 };

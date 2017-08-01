@@ -3,6 +3,8 @@
 #include "NewtonProject.h"
 #include "Circuit.h"
 
+//Circuit Log
+DEFINE_LOG_CATEGORY(CircuitLog);
 
 // Sets default values
 ACircuit::ACircuit()
@@ -58,8 +60,6 @@ void ACircuit::BeginPlay()
 {
 	Super::BeginPlay();
 
-	m_componentCounter = 0;
-	m_circNodeCounter = 0;
 }
 
 // Called every frame
@@ -84,13 +84,25 @@ void ACircuit::AddNode(ACircNode *circNode)
 // Simulation commands
 void ACircuit::Start()
 {
-	m_componentCounter = 0;
-	m_circNodeCounter = 0;
+	int32 m_componentCounter = 0;
+	int32 m_circNodeCounter = 0;
+	NgSpice &ngspice = NgSpice::getInstance();
+	ngspice.SetReporter(GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass()));
+	ngspice.Init();
+	//ngspice.Command("circbyline schema");
 	for (ACircNode *circNode : m_circNodeArray) {
 		circNode->SetId(m_circNodeCounter++);
 	}
 	for (AComponent *component : m_componentArray) {
 		component->SetId(m_componentCounter++);
+		UE_LOG(CircuitLog, Warning, TEXT("Circuit: %s"), *component->GetCircLine());
+		//ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
 	}
+	/*ngspice.Command("tran 0.1 2 uic");
+	ngspice.Command("bg_run");*/
 }
 
+void ACircuit::Command(char *command)
+{
+	NgSpice::getInstance().Command(command);
+}

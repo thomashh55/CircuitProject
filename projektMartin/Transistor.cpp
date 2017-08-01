@@ -4,6 +4,8 @@
 #include "Transistor.h"
 
 
+const FString ATransistor::m_prefix = FString("Q");
+
 // Sets default values
 ATransistor::ATransistor()
 {
@@ -28,6 +30,17 @@ void ATransistor::Tick(float DeltaTime)
 
 FString ATransistor::GetPrefix()
 {
-	return "Q";
+	return m_prefix;
+}
+
+FString ATransistor::GetCircLine()
+{
+	/*if (m_nodeArray[0] != NULL && m_nodeArray[1] != NULL && m_nodeArray[2] != NULL) {
+		return m_id + FString(" ") +
+			FString::FromInt(m_nodeArray[0]->GetId()) + FString(" ") +
+			FString::FromInt(m_nodeArray[1]->GetId()) + FString(" ") +
+			FString::FromInt(m_nodeArray[2]->GetId());
+	}*/
+	return FString();
 }
 

@@ -2,12 +2,16 @@
 
 #pragma once
 
+#include "Ngspice.h"
 #include "CircNode.h"
 #include "Component.h"
 #include "Resistor.h"
 #include "VoltageSource.h"
 #include "GameFramework/Actor.h"
 #include "Circuit.generated.h"
+
+//Circuit Log
+DECLARE_LOG_CATEGORY_EXTERN(CircuitLog, Log, All);
 
 UCLASS()
 class NEWTONPROJECT_API ACircuit : public AActor
@@ -19,11 +23,7 @@ public:
 	ACircuit();
 
 	// Getters and Setters
-	/*int32 GetComponentCounter();
-	void SetComponentCounter(int32 componentCounter);
-	int32 GetCircNodeCounter();
-	void SetCircNodeCounter(int32 circNodeCounter);
-	TArray<AComponent*> GetComponentArray();
+	/*TArray<AComponent*> GetComponentArray();
 	void SetComponentArray(TArray<AComponent*> componentArray);
 	TArray<ACircNode*> GetCircNodeArray();
 	void SetCircNodeArray(TArray<ACircNode*> circNodeArray);*/
@@ -42,10 +42,9 @@ public:
 	
 	// Simulation commands
 	virtual void Start();
+	virtual void Command(char *command);
 
 private:
-	int32 m_componentCounter;
-	int32 m_circNodeCounter;
 	TArray<AComponent*> m_componentArray;
 	TArray<ACircNode*> m_circNodeArray;
 	

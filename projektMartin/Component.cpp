@@ -9,26 +9,10 @@ AComponent::AComponent()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-
-}
-
-FString AComponent::GetPrefix()
-{
-	check(0 && "You must override this");
-	return FString();
+	m_nodeArray = new TArray<ACircNode*>();
 }
 
 // Getters and Setters
-FString AComponent::GetId()
-{
-	return m_id;
-}
-
-void AComponent::SetId(int32 id)
-{
-	m_id = GetPrefix() + FString::FromInt(id);
-}
-
 /*double AComponent::GetCurrent()
 {
 	return m_current;
@@ -37,27 +21,12 @@ void AComponent::SetId(int32 id)
 void AComponent::SetCurrent(double current)
 {
 	m_current = current;
-}
-
-ACircNode *AComponent::GetNode1()
-{
-	return m_node1;
-}
-
-void AComponent::SetNode1(ACircNode *node1)
-{
-	m_node1 = node1;
-}
-
-ACircNode *AComponent::GetNode2()
-{
-	return m_node2;
-}
-
-void AComponent::SetNode2(ACircNode *node2)
-{
-	m_node2 = node2;
 }*/
+
+TArray<ACircNode*> *AComponent::GetNodeArray()
+{
+	return m_nodeArray;
+}
 
 // Called when the game starts or when spawned
 void AComponent::BeginPlay()
@@ -71,4 +40,21 @@ void AComponent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AComponent::SetId(int32 id)
+{
+	m_id = GetPrefix() + FString::FromInt(id);
+}
+
+FString AComponent::GetPrefix()
+{
+	check(0 && "You must override this");
+	return FString();
+}
+
+FString AComponent::GetCircLine()
+{
+	check(0 && "You must override this");
+	return FString();
 }

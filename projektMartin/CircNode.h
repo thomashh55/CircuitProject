@@ -15,7 +15,7 @@ public:
 	ACircNode();
 
 	// Getters and Setters
-	FString GetId();
+	int32 GetId();
 	void SetId(int32 id);
 	double GetVoltage();
 	void SetVoltage(double voltage);
@@ -29,7 +29,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	FString m_id;
+	int32 m_id;
 	double m_voltage;
 	
 };

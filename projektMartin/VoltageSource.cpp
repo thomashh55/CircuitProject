@@ -4,6 +4,8 @@
 #include "VoltageSource.h"
 
 
+const FString AVoltageSource::m_prefix = FString("V");
+
 // Sets default values
 AVoltageSource::AVoltageSource()
 {
@@ -39,6 +41,17 @@ void AVoltageSource::Tick(float DeltaTime)
 
 FString AVoltageSource::GetPrefix()
 {
-	return "V";
+	return m_prefix;
+}
+
+FString AVoltageSource::GetCircLine()
+{
+	if ((*m_nodeArray)[0] != NULL && (*m_nodeArray)[1] != NULL) {
+		return m_id + FString(" ") +
+			FString::FromInt((*m_nodeArray)[0]->GetId()) + FString(" ") +
+			FString::FromInt((*m_nodeArray)[1]->GetId()) + FString(" ") +
+			FString::SanitizeFloat(m_directCurrent);
+	}
+	return FString::FromInt(m_nodeArray->Num());
 }
 

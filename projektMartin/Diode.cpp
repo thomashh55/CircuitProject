@@ -4,6 +4,8 @@
 #include "Diode.h"
 
 
+const FString ADiode::m_prefix = FString("D");
+
 // Sets default values
 ADiode::ADiode()
 {
@@ -28,6 +30,16 @@ void ADiode::Tick(float DeltaTime)
 
 FString ADiode::GetPrefix()
 {
-	return "D";
+	return m_prefix;
+}
+
+FString ADiode::GetCircLine()
+{
+	/*if (m_nodeArray[0] != NULL && m_nodeArray[1] != NULL) {
+		return m_id + FString(" ") +
+			FString::FromInt(m_nodeArray[0]->GetId()) + FString(" ") +
+			FString::FromInt(m_nodeArray[1]->GetId());
+	}*/
+	return FString();
 }
 

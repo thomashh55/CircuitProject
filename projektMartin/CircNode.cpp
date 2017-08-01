@@ -13,14 +13,14 @@ ACircNode::ACircNode()
 }
 
 // Getters and Setters
-FString ACircNode::GetId()
+int32 ACircNode::GetId()
 {
 	return m_id;
 }
 
 void ACircNode::SetId(int32 id)
 {
-	m_id = FString("V(") + FString::FromInt(id) + FString(")");
+	m_id = id;
 }
 
 double ACircNode::GetVoltage()

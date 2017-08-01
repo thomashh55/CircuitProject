@@ -23,8 +23,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Returns prefix for NgSpice
+	// Returns NgSpice prefix
 	virtual FString GetPrefix() override;
+
+	// Returns line for NgSpice
+	virtual FString GetCircLine() override;
 
 private:
 	static const FString m_prefix;
