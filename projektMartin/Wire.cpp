@@ -39,18 +39,28 @@ void AWire::Tick(float DeltaTime)
 
 }
 
+// Assigns nodes to the wire
+void AWire::AddCircNodes(ACircNode *circNode1, ACircNode *circNode2)
+{
+	m_circNodeArray.Empty();
+	m_circNodeArray.Add(circNode1);
+	m_circNodeArray.Add(circNode2);
+}
+
+// Returns NgSpice prefix
 FString AWire::GetPrefix()
 {
 	return m_prefix;
 }
 
+// Returns line for NgSpice
 FString AWire::GetCircLine()
 {
-	/*if (m_nodeArray[0] != NULL && m_nodeArray[1] != NULL) {
+	if (m_circNodeArray.Num() == 2 && m_circNodeArray[0] != NULL && m_circNodeArray[1] != NULL) {
 		return m_id + FString(" ") +
-			FString::FromInt(m_nodeArray[0]->GetId()) + FString(" ") +
-			FString::FromInt(m_nodeArray[1]->GetId()) + FString(" 0");
-	}*/
+			FString::FromInt(m_circNodeArray[0]->GetId()) + FString(" ") +
+			FString::FromInt(m_circNodeArray[1]->GetId()) + FString(" 0");
+	}
 	return FString();
 }
 

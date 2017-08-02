@@ -5,8 +5,14 @@
 #include "Ngspice.h"
 #include "CircNode.h"
 #include "Component.h"
+
+#include "Capacitor.h"
+#include "Diode.h"
 #include "Resistor.h"
+#include "Transistor.h"
 #include "VoltageSource.h"
+#include "Wire.h"
+
 #include "GameFramework/Actor.h"
 #include "Circuit.generated.h"
 
@@ -21,12 +27,6 @@ class NEWTONPROJECT_API ACircuit : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ACircuit();
-
-	// Getters and Setters
-	/*TArray<AComponent*> GetComponentArray();
-	void SetComponentArray(TArray<AComponent*> componentArray);
-	TArray<ACircNode*> GetCircNodeArray();
-	void SetCircNodeArray(TArray<ACircNode*> circNodeArray);*/
 	
 protected:
 	// Called when the game starts or when spawned
@@ -38,11 +38,13 @@ public:
 
 	// Create circuit
 	virtual void AddComponent(AComponent *component);
-	virtual void AddNode(ACircNode *circNode);
+	virtual void AddWire(AWire *wire, ACircNode *circNode1, ACircNode *circNode2);
+
+	// Get array of components
+	virtual TArray<AComponent*> GetComponentArray();
 	
 	// Simulation commands
 	virtual void Start();
-	virtual void Command(char *command);
 
 private:
 	TArray<AComponent*> m_componentArray;

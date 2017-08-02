@@ -18,7 +18,11 @@ ATransistor::ATransistor()
 void ATransistor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Create nodes
+	m_circNodeArray.Add(GetWorld()->SpawnActor<ACircNode>(ACircNode::StaticClass()));
+	m_circNodeArray.Add(GetWorld()->SpawnActor<ACircNode>(ACircNode::StaticClass()));
+	m_circNodeArray.Add(GetWorld()->SpawnActor<ACircNode>(ACircNode::StaticClass()));
 }
 
 // Called every frame
@@ -28,19 +32,21 @@ void ATransistor::Tick(float DeltaTime)
 
 }
 
+// Returns NgSpice prefix
 FString ATransistor::GetPrefix()
 {
 	return m_prefix;
 }
 
+// Returns line for NgSpice
 FString ATransistor::GetCircLine()
 {
-	/*if (m_nodeArray[0] != NULL && m_nodeArray[1] != NULL && m_nodeArray[2] != NULL) {
+	if (m_circNodeArray.Num() == 3 && m_circNodeArray[0] != NULL && m_circNodeArray[1] != NULL && m_circNodeArray[2] != NULL) {
 		return m_id + FString(" ") +
-			FString::FromInt(m_nodeArray[0]->GetId()) + FString(" ") +
-			FString::FromInt(m_nodeArray[1]->GetId()) + FString(" ") +
-			FString::FromInt(m_nodeArray[2]->GetId());
-	}*/
+			FString::FromInt(m_circNodeArray[0]->GetId()) + FString(" ") +
+			FString::FromInt(m_circNodeArray[1]->GetId()) + FString(" ") +
+			FString::FromInt(m_circNodeArray[2]->GetId());
+	}
 	return FString();
 }
 

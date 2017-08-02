@@ -27,6 +27,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Assigns nodes to the wire
+	virtual void AddCircNodes(ACircNode *circNode1, ACircNode *circNode2);
+
 	// Returns NgSpice prefix
 	virtual FString GetPrefix() override;
 

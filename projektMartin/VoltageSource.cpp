@@ -29,7 +29,10 @@ void AVoltageSource::SetDirectCurrent(double directCurrent)
 void AVoltageSource::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Create nodes
+	m_circNodeArray.Add(GetWorld()->SpawnActor<ACircNode>(ACircNode::StaticClass()));
+	m_circNodeArray.Add(GetWorld()->SpawnActor<ACircNode>(ACircNode::StaticClass()));
 }
 
 // Called every frame
@@ -39,19 +42,21 @@ void AVoltageSource::Tick(float DeltaTime)
 
 }
 
+// Returns NgSpice prefix
 FString AVoltageSource::GetPrefix()
 {
 	return m_prefix;
 }
 
+// Returns line for NgSpice
 FString AVoltageSource::GetCircLine()
 {
-	if ((*m_nodeArray)[0] != NULL && (*m_nodeArray)[1] != NULL) {
+	if (m_circNodeArray.Num() == 2 && m_circNodeArray[0] != NULL && m_circNodeArray[1] != NULL) {
 		return m_id + FString(" ") +
-			FString::FromInt((*m_nodeArray)[0]->GetId()) + FString(" ") +
-			FString::FromInt((*m_nodeArray)[1]->GetId()) + FString(" ") +
+			FString::FromInt(m_circNodeArray[0]->GetId()) + FString(" ") +
+			FString::FromInt(m_circNodeArray[1]->GetId()) + FString(" ") +
 			FString::SanitizeFloat(m_directCurrent);
 	}
-	return FString::FromInt(m_nodeArray->Num());
+	return FString();
 }
 

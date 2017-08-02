@@ -3,16 +3,11 @@
 #include "NewtonProject.h"
 #include "Ngspice.h"
 
-#include <sstream>
-#include <stdexcept>
-
-#include <algorithm>
-
 using namespace std;
 
 NgSpice::NgSpice()
 {
-
+	Init();
 }
 
 NgSpice& NgSpice::getInstance()
@@ -29,25 +24,19 @@ void NgSpice::SetReporter(AReporter *reporter)
 
 int NgSpice::Init()
 {
-    setlocale(LC_ALL, "C");
 	int ret = ngSpice_Init(&cbSendChar, &cbSendStat, &cbControlledExit, &cbSendData, &cbSendInitData, &cbBGThreadRunning, this);
-    setlocale(LC_ALL, "");
 	return ret;
 }
 
 int NgSpice::Command(char *cmd)
 {
-	setlocale(LC_ALL, "C");
 	int ret = ngSpice_Command(cmd);
-	setlocale(LC_ALL, "");
 	return ret;
 }
 
 pvector_info NgSpice::GetVecInfo(char *vecname)
 {
-	setlocale(LC_ALL, "C");
 	pvector_info vi = ngGet_Vec_Info(vecname);
-	setlocale(LC_ALL, "");
 	if (m_reporter != NULL) {
 		if (vi) {
 			m_reporter->Report("GetVecInfo:");
@@ -72,49 +61,37 @@ pvector_info NgSpice::GetVecInfo(char *vecname)
 
 int NgSpice::LoadCirc(char **circarray)
 {
-	setlocale(LC_ALL, "C");
 	int ret = ngSpice_Circ(circarray);
-	setlocale(LC_ALL, "");
 	return ret;
 }
 
 char *NgSpice::GetPlotName()
 {
-	setlocale(LC_ALL, "C");
 	char *name = ngSpice_CurPlot();
-	setlocale(LC_ALL, "");
 	return name;
 }
 
 char **NgSpice::GetAllPlots()
 {
-	setlocale(LC_ALL, "C");
 	char **plots = ngSpice_AllPlots();
-	setlocale(LC_ALL, "");
 	return plots;
 }
 
 char **NgSpice::GetAllVecs(char* plotname)
 {
-	setlocale(LC_ALL, "C");
 	char **vecs = ngSpice_AllVecs(plotname);
-	setlocale(LC_ALL, "");
 	return vecs;
 }
 
 bool NgSpice::IsRunning()
 {
-	setlocale(LC_ALL, "C");
 	bool bIsRunning = ngSpice_running();
-	setlocale(LC_ALL, "");
 	return bIsRunning;
 }
 
 bool NgSpice::SetBreakpoint(double time)
 {
-	setlocale(LC_ALL, "C");
 	bool bIsSet = ngSpice_SetBkpt(time);
-	setlocale(LC_ALL, "");
 	return bIsSet;
 }
 

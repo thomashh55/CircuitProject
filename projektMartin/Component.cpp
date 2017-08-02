@@ -9,7 +9,7 @@ AComponent::AComponent()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	m_nodeArray = new TArray<ACircNode*>();
+
 }
 
 // Getters and Setters
@@ -23,9 +23,9 @@ void AComponent::SetCurrent(double current)
 	m_current = current;
 }*/
 
-TArray<ACircNode*> *AComponent::GetNodeArray()
+TArray<ACircNode*> AComponent::GetCircNodeArray()
 {
-	return m_nodeArray;
+	return m_circNodeArray;
 }
 
 // Called when the game starts or when spawned

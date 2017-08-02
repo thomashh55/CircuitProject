@@ -73,12 +73,22 @@ void ACircuit::Tick(float DeltaTime)
 void ACircuit::AddComponent(AComponent *component)
 {
 	m_componentArray.Add(component);
+	for (ACircNode *node : component->GetCircNodeArray()) {
+		m_circNodeArray.Add(node);
+	}
 }
 
-// Adds component to the circuit
-void ACircuit::AddNode(ACircNode *circNode)
+// Adds wires to the circuit
+void ACircuit::AddWire(AWire *wire, ACircNode *circNode1, ACircNode *circNode2)
 {
-	m_circNodeArray.Add(circNode);
+	m_componentArray.Add(wire);
+	wire->AddCircNodes(circNode1, circNode2);
+}
+
+// Get array of components
+TArray<AComponent*> ACircuit::GetComponentArray()
+{
+	return m_componentArray;
 }
 
 // Simulation commands
@@ -88,21 +98,15 @@ void ACircuit::Start()
 	int32 m_circNodeCounter = 0;
 	NgSpice &ngspice = NgSpice::getInstance();
 	ngspice.SetReporter(GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass()));
-	ngspice.Init();
-	//ngspice.Command("circbyline schema");
+	ngspice.Command("circbyline schema");
 	for (ACircNode *circNode : m_circNodeArray) {
 		circNode->SetId(m_circNodeCounter++);
 	}
 	for (AComponent *component : m_componentArray) {
 		component->SetId(m_componentCounter++);
 		UE_LOG(CircuitLog, Warning, TEXT("Circuit: %s"), *component->GetCircLine());
-		//ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
+		ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
 	}
-	/*ngspice.Command("tran 0.1 2 uic");
-	ngspice.Command("bg_run");*/
-}
-
-void ACircuit::Command(char *command)
-{
-	NgSpice::getInstance().Command(command);
+	ngspice.Command("circbyline .end");
+	ngspice.Command("tran 0.1 2 uic");
 }

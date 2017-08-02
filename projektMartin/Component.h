@@ -18,7 +18,7 @@ public:
 	// Getters and Setters
 	/*double GetCurrent();
 	void SetCurrent(double current);*/
-	TArray<ACircNode*> *GetNodeArray();
+	TArray<ACircNode*> GetCircNodeArray();
 
 protected:
 	// Called when the game starts or when spawned
@@ -38,6 +38,6 @@ public:
 protected:
 	FString m_id;
 	double m_current;
-	TArray<ACircNode*> *m_nodeArray;
+	TArray<ACircNode*> m_circNodeArray;
 	
 };

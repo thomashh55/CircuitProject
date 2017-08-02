@@ -128,41 +128,33 @@ void ATester::PressedY()
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Circuit created"));
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating nodes and components"));
-	TArray<ACircNode*> nodeArray;
-	for (int i = 0; i < 4; i++) {
-		ACircNode *node = GetWorld()->SpawnActor<ACircNode>(ACircNode::StaticClass());
-		nodeArray.Add(node);
-		circuit->AddNode(node);
-	}
-	TArray<AComponent*> componentArray;
 
 	AVoltageSource *voltageSource = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
-	voltageSource->GetNodeArray()->Add(nodeArray[0]);
-	voltageSource->GetNodeArray()->Add(nodeArray[1]);
 	voltageSource->SetDirectCurrent(9);
-	componentArray.Add(voltageSource);
 	circuit->AddComponent(voltageSource);
 
-	/*AResistor *resistor = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
-	resistor->GetNodeArray().Add(nodeArray[1]);
-	resistor->GetNodeArray().Add(nodeArray[2]);
-	resistor->SetResistance(3);
-	componentArray.Add(resistor);
-	circuit->AddComponent(resistor);
+	AResistor *resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor1->SetResistance(3);
+	circuit->AddComponent(resistor1);
 
-	resistor = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
-	resistor->GetNodeArray().Add(nodeArray[2]);
-	resistor->GetNodeArray().Add(nodeArray[3]);
-	resistor->SetResistance(10);
-	componentArray.Add(resistor);
-	circuit->AddComponent(resistor);
+	AResistor *resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor2->SetResistance(10);
+	circuit->AddComponent(resistor2);
 
-	resistor = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
-	resistor->GetNodeArray().Add(nodeArray[3]);
-	resistor->GetNodeArray().Add(nodeArray[0]);
-	resistor->SetResistance(5);
-	componentArray.Add(resistor);
-	circuit->AddComponent(resistor);*/
+	AResistor *resistor3 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor3->SetResistance(5);
+	circuit->AddComponent(resistor3);
+
+	GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass())->Report(FString::SanitizeFloat(9));
+
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		voltageSource->GetCircNodeArray()[1], resistor1->GetCircNodeArray()[0]);
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor1->GetCircNodeArray()[1], resistor2->GetCircNodeArray()[0]);
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor2->GetCircNodeArray()[1], resistor3->GetCircNodeArray()[0]);
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor3->GetCircNodeArray()[1], voltageSource->GetCircNodeArray()[0]);
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Nodes and components created"));
 }
@@ -196,35 +188,28 @@ void ATester::PressedP()
 void ATester::PressedG()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: G Pressed"));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation"));
-	circuit->Start();
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation started"));
+	NgSpice::getInstance().SetReporter(GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass()));
+	NgSpice::getInstance().Command("circbyline test");
+	NgSpice::getInstance().Command("circbyline V1 0 1 9");
+	NgSpice::getInstance().Command("circbyline R2 2 3 3");
+	NgSpice::getInstance().Command("circbyline R3 4 5 10");
+	NgSpice::getInstance().Command("circbyline R4 6 7 5");
+	NgSpice::getInstance().Command("circbyline V5 1 2 0");
+	NgSpice::getInstance().Command("circbyline V6 3 4 0");
+	NgSpice::getInstance().Command("circbyline V7 5 6 0");
+	NgSpice::getInstance().Command("circbyline V8 7 0 0");
+	NgSpice::getInstance().Command("circbyline .end");
+	NgSpice::getInstance().Command("tran 0.1 2 uic");
 }
 
 void ATester::PressedH()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: H Pressed"));
-
-	/*char **plots = ngspice->GetAllPlots();
-	int8 i = 0;
-	while (plots[i] != NULL) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Plot %d: %s"), i, *FString(plots[i]));
-		i++;
-	}*/
 }
 
 void ATester::PressedJ()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: J Pressed"));
-	/*FString plotName(ngspice->GetPlotName());
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Plot name: %s"), *plotName);
-
-	char **vecs = ngspice->GetAllVecs(TCHAR_TO_ANSI(*plotName));
-	int8 i = 0;
-	while (vecs[i] != NULL) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Vec %d: %s"), i, *FString(vecs[i]));
-		i++;
-	}*/
 }
 
 void ATester::PressedK()
@@ -235,40 +220,49 @@ void ATester::PressedK()
 void ATester::PressedL()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: L Pressed"));
-	circuit->Command("destroy");
+	NgSpice::getInstance().Command("destroy");
 }
-
-double time = 0;
 
 void ATester::PressedC()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: C Pressed"));
-	time = 1;
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Time reset: %f"), time);
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation"));
+	circuit->Start();
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation started"));
 }
 
 void ATester::PressedV()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: V Pressed"));
-	//ngspice->SetBreakpoint(time);
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Time set: %f"), time);
-	time += 1.0f;
 }
 
 void ATester::PressedB()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: B Pressed"));
-	//int8 iret = ngspice->Command("op");
 }
 
 void ATester::PressedN()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: N Pressed"));
-	//int8 iret = ngspice->Command("dc v1 5 15 1");
+
+	char **plots = NgSpice::getInstance().GetAllPlots();
+	int8 i = 0;
+	while (plots[i] != NULL) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Plot %d: %s"), i, *FString(plots[i]));
+		i++;
+	}
 }
 
 void ATester::PressedM()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: M Pressed"));
-	//int8 iret = ngspice->Command("tran 0.1 2 uic");
+	FString plotName(NgSpice::getInstance().GetPlotName());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Plot name: %s"), *plotName);
+
+	char **vecs = NgSpice::getInstance().GetAllVecs(TCHAR_TO_ANSI(*plotName));
+	int8 i = 0;
+	while (vecs[i] != NULL) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Vec %d: %s"), i, *FString(vecs[i]));
+		i++;
+	}
 }
