@@ -32,6 +32,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Called before destroing the actor
+	virtual void BeginDestroy() override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -45,6 +48,9 @@ public:
 	
 	// Simulation commands
 	virtual void Start();
+
+	// Debug purpose
+	virtual void Report(const FString& report);
 
 private:
 	TArray<AComponent*> m_componentArray;

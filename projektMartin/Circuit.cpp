@@ -15,27 +15,7 @@ ACircuit::ACircuit()
 }
 
 // Getters and Setters
-/*int32 ACircuit::GetComponentCounter()
-{
-	return m_componentCounter;
-}
-
-void ACircuit::SetComponentCounter(int32 componentCounter)
-{
-	m_componentCounter = componentCounter;
-}
-
-int32 ACircuit::GetCircNodeCounter()
-{
-	return m_circNodeCounter;
-}
-
-void ACircuit::SetCircNodeCounter(int32 circNodeCounter)
-{
-	m_circNodeCounter = circNodeCounter;
-}
-
-TArray<AComponent*> ACircuit::GetComponentArray()
+/*TArray<AComponent*> ACircuit::GetComponentArray()
 {
 	return m_componentArray;
 }
@@ -60,6 +40,17 @@ void ACircuit::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Adds this circuit to NgSpice
+	NgSpice::getInstance().AddCircuit(this);
+}
+
+// Called before destroing the actor
+void ACircuit::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	// Removes this circuit from NgSpice
+	NgSpice::getInstance().RemoveCircuit(this);
 }
 
 // Called every frame
@@ -97,7 +88,6 @@ void ACircuit::Start()
 	int32 m_componentCounter = 0;
 	int32 m_circNodeCounter = 0;
 	NgSpice &ngspice = NgSpice::getInstance();
-	ngspice.SetReporter(GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass()));
 	ngspice.Command("circbyline schema");
 	for (ACircNode *circNode : m_circNodeArray) {
 		circNode->SetId(m_circNodeCounter++);
@@ -109,4 +99,9 @@ void ACircuit::Start()
 	}
 	ngspice.Command("circbyline .end");
 	ngspice.Command("tran 0.1 2 uic");
+}
+
+void ACircuit::Report(const FString& report)
+{
+	UE_LOG(CircuitLog, Warning, TEXT("Report: %s"), *report);
 }

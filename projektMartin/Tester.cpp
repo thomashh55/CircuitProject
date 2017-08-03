@@ -40,6 +40,10 @@ void ATester::BeginPlay()
 	InputComponent->BindKey(EKeys::N, IE_Released, this, &ATester::PressedN);
 	InputComponent->BindKey(EKeys::M, IE_Released, this, &ATester::PressedM);
 
+	// Create circuit
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating circuit"));
+	circuit = GetWorld()->SpawnActor<ACircuit>(ACircuit::StaticClass());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Circuit created"));
 
 	// Assign reporter
 	/*reporter = GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass());
@@ -122,11 +126,6 @@ void ATester::PressedY()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Y Pressed"));
 
-	// Create circuit
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating circuit"));
-	circuit = GetWorld()->SpawnActor<ACircuit>(ACircuit::StaticClass());
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Circuit created"));
-
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating nodes and components"));
 
 	AVoltageSource *voltageSource = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
@@ -145,8 +144,6 @@ void ATester::PressedY()
 	resistor3->SetResistance(5);
 	circuit->AddComponent(resistor3);
 
-	GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass())->Report(FString::SanitizeFloat(9));
-
 	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
 		voltageSource->GetCircNodeArray()[1], resistor1->GetCircNodeArray()[0]);
 	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
@@ -162,21 +159,25 @@ void ATester::PressedY()
 void ATester::PressedU()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: U Pressed"));
+	NgSpice::getInstance().Command("bg_run");
 }
 
 void ATester::PressedI()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: I Pressed"));
+	NgSpice::getInstance().Command("bg_halt");
 }
 
 void ATester::PressedO()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: O Pressed"));
+	NgSpice::getInstance().Command("bg_resume");
 }
 
 void ATester::PressedP()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: P Pressed"));
+	NgSpice::getInstance().Command("bg_reset");
 	//int8 iret = circuit->Command("bg_run");
 	//int8 iret = circuit->Command("bg_step");
 	//int8 iret = circuit->Command("bg_halt");
@@ -188,7 +189,6 @@ void ATester::PressedP()
 void ATester::PressedG()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: G Pressed"));
-	NgSpice::getInstance().SetReporter(GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass()));
 	NgSpice::getInstance().Command("circbyline test");
 	NgSpice::getInstance().Command("circbyline V1 0 1 9");
 	NgSpice::getInstance().Command("circbyline R2 2 3 3");
@@ -198,8 +198,9 @@ void ATester::PressedG()
 	NgSpice::getInstance().Command("circbyline V6 3 4 0");
 	NgSpice::getInstance().Command("circbyline V7 5 6 0");
 	NgSpice::getInstance().Command("circbyline V8 7 0 0");
+	NgSpice::getInstance().Command("circbyline .tran 0.1 2 uic");
 	NgSpice::getInstance().Command("circbyline .end");
-	NgSpice::getInstance().Command("tran 0.1 2 uic");
+	//NgSpice::getInstance().Command("tran 0.1 2 uic");
 }
 
 void ATester::PressedH()
@@ -215,6 +216,7 @@ void ATester::PressedJ()
 void ATester::PressedK()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: K Pressed"));
+	NgSpice::getInstance().Command("remcirc");
 }
 
 void ATester::PressedL()

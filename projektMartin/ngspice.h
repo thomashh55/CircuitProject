@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include "Reporter.h"
 #include "sharedspice.h"
 
-using namespace std;
+class ACircuit;
 
 class NgSpice {
 
@@ -13,8 +12,11 @@ public:
 	// Returns singleton instance
 	static NgSpice &getInstance();
 
-	void SetReporter(AReporter *reporter);
+	// Adds circuit for returned values
+	virtual void AddCircuit(ACircuit *circuit);
+	virtual void RemoveCircuit(ACircuit *circuit);
 
+	// NgSpice commands
 	virtual int Init();
 	virtual int Command(char *cmd);
 	virtual pvector_info GetVecInfo(char *vecname);
@@ -30,6 +32,7 @@ private:
 	NgSpice(NgSpice const&);
 	void operator=(NgSpice const&);
 
+	// NgSpice callback functions
     static int cbSendChar(char *what, int id, void *user);
     static int cbSendStat(char *what, int id, void *user);
 	static int cbControlledExit(int status, bool immediate, bool exit_upon_quit, int id, void *user);
@@ -37,6 +40,6 @@ private:
 	static int cbSendInitData(pvecinfoall what, int id, void *user);
     static int cbBGThreadRunning(bool is_running, int id, void *user);
 
-	AReporter *m_reporter;
+	TArray<ACircuit*> m_circuitArray;
 
 };
