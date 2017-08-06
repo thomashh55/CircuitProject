@@ -1,14 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MyActor.h"
-#include "ngspice/sharedspice.h"
-#include "ngspice/dvec.h"
-#include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <string.h>
-#include <sstream>
 
 int ng_getchar(char* outputreturn, int ident, void* userdata);
 int ng_getstat(char* outputreturn, int ident, void* userdata);
@@ -25,7 +17,7 @@ HMODULE ngdllhandle = NULL;*/
 // Sets default values
 AMyActor::AMyActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
@@ -34,47 +26,23 @@ dvec * vectors[100];	// vektorov bude tolko, kolko bude nodov+1, to sa da vyrata
 int vectorscount = 0;
 
 void vypishodnot() {
+	// prejst vsetky vektory, ak sa meno zacina na V, tak prejde vsetky nody a najde spravne id,, ak sa zacina na v tak prejde vsetky dummy voltage a najde spravne id
+
 	for (int i = 0; i < vectorscount; i++) {
 		double * vectorvalue = vectors[i]->v_realdata;
-		UE_LOG(LogTemp, Warning, TEXT("tu je vektor zaznamenany a jeho dlzka je %d\n"), vectors[i]->v_length);
-		
+		UE_LOG(LogTemp, Warning, TEXT("tu je vektor zaznamenany a jeho meno je %s\n"), *(FString(vectors[i]->v_name)));
+
 		/*for (int a = 0; a < vectors[i]->v_length; a++) {
-			FString value = FString::SanitizeFloat(vectorvalue[a]);
-			UE_LOG(LogTemp, Warning, TEXT("Vector value %d: %s\n"), a, *(value));
+		FString value = FString::SanitizeFloat(vectorvalue[a]);
+		UE_LOG(LogTemp, Warning, TEXT("Vector value %d: %s\n"), a, *(value));
 		}*/
 	}
 }
 
 // Called when the game starts or when spawned
 void AMyActor::BeginPlay()
-{/*
-	ngdllhandle = LoadLibraryA("C:\\Users\\Tomas\\Documents\\Unreal Projects\\MyProject2\\Binaries\\Win64\\ngspice.dll");
-	
-	if (!ngdllhandle) {
-		UE_LOG(LogTemp, Warning, TEXT("nejde nacitat kniznicu"));
-	}
-	
-	ngSpice_Init_handle = GetProcAddress(ngdllhandle, "ngSpice_Init");
-	ngSpice_Command_handle = GetProcAddress(ngdllhandle, "ngSpice_Command");
-
-	int * ret = ((int * (*)(SendChar*, SendStat*, ControlledExit*, SendData*, SendInitData*,
-		BGThreadRunning*, void*)) ngSpice_Init_handle)(ng_getchar, ng_getstat,
-			ng_exit, NULL, ng_initdata, ng_thread_runs, NULL);
-
-	//UE_LOG(LogTemp, Warning, TEXT("%d"), *ret);
-	
-	ret = ((int * (*)(char*)) ngSpice_Command_handle)("circbyline fail test");
-	ret = ((int * (*)(char*)) ngSpice_Command_handle)("circbyline V1 1 0 1");
-	ret = ((int * (*)(char*)) ngSpice_Command_handle)("circbyline R1 1 0 1");
-	ret = ((int * (*)(char*)) ngSpice_Command_handle)("circbyline .include xyz");
-	ret = ((int * (*)(char*)) ngSpice_Command_handle)("circbyline .dc V1 0 1 0.1");
-	ret = ((int * (*)(char*)) ngSpice_Command_handle)("circbyline .end");
-	
-	Sleep(100);
-
-	ret = ((int * (*)(char*)) ngSpice_Command_handle)("bg_run");*/
-
-	int ret = ngSpice_Init(ng_getchar, ng_getstat, ng_exit, ng_data, ng_initdata, ng_thread_runs, NULL);
+{
+	/*int ret = ngSpice_Init(ng_getchar, ng_getstat, ng_exit, ng_data, ng_initdata, ng_thread_runs, NULL);
 
 	ngSpice_Command("circbyline test array");
 	ngSpice_Command("circbyline V1 1 0 1");
@@ -83,38 +51,39 @@ void AMyActor::BeginPlay()
 	ngSpice_Command("circbyline .tran 100ms 30000ms");
 	ngSpice_Command("circbyline .end");
 	ngSpice_Command("bg_run");
-	
-	//UE_LOG(LogTemp, Warning, TEXT("\nCurrent plot is %s\n\n"), *(ngSpice_CurPlot()));
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("threadrunning: %d"), threadrunning);
 
-	Sleep(500);
-	
-	for (int a=0;;a++) {
-		//UE_LOG(LogTemp, Warning, TEXT("dalsia iteracie"));
-		if (threadrunning == false) {
-			vypishodnot();
-			UE_LOG(LogTemp, Warning, TEXT("tolkoto krat sa slucka otocila kym sa cakalo na finish simulacie: %d"), a);
-			break;
-		}
-	}
+	Super::BeginPlay();*/
 
-	UE_LOG(LogTemp, Warning, TEXT("DA SA AJ TU DOSTAT? threadrunning: %d"), threadrunning);*/
-	
-	/*ngSpice_Command("bg_halt");
-	UE_LOG(LogTemp, Warning, TEXT("pozastavene"));
-	ngSpice_Command("alter c1=2");
-    ngSpice_Command("listing");
-	ngSpice_Command("bg_resume");*/
+	//ACircuit *circuit;
+	circuit = GetWorld()->SpawnActor<ACircuit>(ACircuit::StaticClass());
 
-	/*FString curplot = ngSpice_CurPlot();
-	UE_LOG(LogTemp, Warning, TEXT("\nCurrent plot is %s\n\n"), *curplot);*/
-	
+	AVoltageSource *voltageSource = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
+	voltageSource->SetDirectCurrent(9);
+	circuit->AddComponent(voltageSource);
 
-	// strana 354,,  ngSpice_AllVecs
-	
-	Super::BeginPlay();
-	
+	AResistor *resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor1->SetResistance(3);
+	circuit->AddComponent(resistor1);
+
+	AResistor *resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor2->SetResistance(10);
+	circuit->AddComponent(resistor2);
+
+	AResistor *resistor3 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor3->SetResistance(5);
+	circuit->AddComponent(resistor3);
+
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		voltageSource->GetCircNodeArray()[1], resistor1->GetCircNodeArray()[0]);
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor1->GetCircNodeArray()[1], resistor2->GetCircNodeArray()[0]);
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor2->GetCircNodeArray()[1], resistor3->GetCircNodeArray()[0]);
+	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor3->GetCircNodeArray()[1], voltageSource->GetCircNodeArray()[0]);
+
+	circuit->Start();
+
 }
 
 // Called every frame
@@ -138,21 +107,21 @@ int ng_getstat(char * outputreturn, int ident, void* userdata)
 	return 0;
 }
 
-bool wasrunning = false;
+bool wasrunning2 = false;
 int ng_thread_runs(bool noruns, int ident, void* userdata)
 {
 	if (noruns) {
 		UE_LOG(LogTemp, Warning, TEXT("bg not running\n"));
 
-		if (wasrunning == true) {
+		if (wasrunning2 == true) {
 			vypishodnot();
 		}
 
-		wasrunning = false;
+		wasrunning2 = false;
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("bg running\n"));
-		wasrunning = true;
+		wasrunning2 = true;
 	}
 	return 0;
 }
@@ -200,8 +169,8 @@ int ng_initdata(pvecinfoall intdata, int ident, void* userdata)
 		double * vectorvalue = vector->v_realdata;
 
 		for (int i = 0; i < vector->v_length; i++) {
-			FString value = FString::SanitizeFloat(vectorvalue[i]);
-			UE_LOG(LogTemp, Warning, TEXT("Vector value %d: %s\n"),i , *(value));
+		FString value = FString::SanitizeFloat(vectorvalue[i]);
+		UE_LOG(LogTemp, Warning, TEXT("Vector value %d: %s\n"),i , *(value));
 		}*/
 	}
 
@@ -214,10 +183,10 @@ int ng_data(pvecvaluesall vdata, int numvecs, int ident, void* userdata)
 
 	/*int i;
 	for (i = 0; i < numvecs; i++) {
-		//UE_LOG(LogTemp, Warning, TEXT("tu sa vektor vypisuje data"));
-		FString name = vdata->vecsa[i]->name;
-		FString value = FString::SanitizeFloat(vdata->vecsa[i]->creal); 
-		UE_LOG(LogTemp, Warning, TEXT("Vector: %s a jeho hodnota: %s\n"), *(name), *(value));
+	//UE_LOG(LogTemp, Warning, TEXT("tu sa vektor vypisuje data"));
+	FString name = vdata->vecsa[i]->name;
+	FString value = FString::SanitizeFloat(vdata->vecsa[i]->creal);
+	UE_LOG(LogTemp, Warning, TEXT("Vector: %s a jeho hodnota: %s\n"), *(name), *(value));
 	}*/
 
 	return 0;

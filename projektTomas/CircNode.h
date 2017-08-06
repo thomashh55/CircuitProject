@@ -2,35 +2,35 @@
 
 #pragma once
 
-#include "Circuit.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ngspice/sharedspice.h"
-#include "ngspice/dvec.h"
-#include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <string.h>
-#include <sstream>
-#include "MyActor.generated.h"
+#include "CircNode.generated.h"
 
 UCLASS()
-class MYPROJECT2_API AMyActor : public AActor
+class MYPROJECT2_API ACircNode : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AMyActor();
-	ACircuit *circuit;
 
+public:
+	// Sets default values for this actor's properties
+	ACircNode();
+
+	// Getters and Setters
+	int32 GetId();
+	void SetId(int32 id);
+	double GetVoltage();
+	void SetVoltage(double voltage);
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
+private:
+	int32 m_id;
+	double m_voltage;
+
 };
