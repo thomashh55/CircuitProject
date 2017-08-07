@@ -22,15 +22,15 @@ AMyActor::AMyActor()
 
 }
 
-dvec * vectors[100];	// vektorov bude tolko, kolko bude nodov+1, to sa da vyratat,, plus nemusi sa kazdy uvazovat
-int vectorscount = 0;
+dvec * vectors2[100];	// vektorov bude tolko, kolko bude nodov+1, to sa da vyratat,, plus nemusi sa kazdy uvazovat
+int vectorscount2 = 0;
 
 void vypishodnot() {
 	// prejst vsetky vektory, ak sa meno zacina na V, tak prejde vsetky nody a najde spravne id,, ak sa zacina na v tak prejde vsetky dummy voltage a najde spravne id
 
-	for (int i = 0; i < vectorscount; i++) {
-		double * vectorvalue = vectors[i]->v_realdata;
-		UE_LOG(LogTemp, Warning, TEXT("tu je vektor zaznamenany a jeho meno je %s\n"), *(FString(vectors[i]->v_name)));
+	for (int i = 0; i < vectorscount2; i++) {
+		double * vectorvalue = vectors2[i]->v_realdata;
+		UE_LOG(LogTemp, Warning, TEXT("tu je vektor zaznamenany a jeho meno je %s\n"), *(FString(vectors2[i]->v_name)));
 
 		/*for (int a = 0; a < vectors[i]->v_length; a++) {
 		FString value = FString::SanitizeFloat(vectorvalue[a]);
@@ -90,7 +90,6 @@ void AMyActor::BeginPlay()
 void AMyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 int ng_getchar(char * outputreturn, int ident, void* userdata)
@@ -139,10 +138,10 @@ int ng_exit(int exitstatus, bool immediate, bool quitexit, int ident, void* user
 	}
 	return exitstatus;
 }
-
+/*
 int ng_initdata(pvecinfoall intdata, int ident, void* userdata)
 {
-	/*FString name = intdata->name;
+	FString name = intdata->name;
 	UE_LOG(LogTemp, Warning, TEXT("Name of the plot: %s"), *(name));
 
 	FString title = intdata->title;
@@ -152,18 +151,18 @@ int ng_initdata(pvecinfoall intdata, int ident, void* userdata)
 	UE_LOG(LogTemp, Warning, TEXT("Date of the plot: %s"), *(date));
 
 	FString type = intdata->type;
-	UE_LOG(LogTemp, Warning, TEXT("Type of the plot: %s\n"), *(type));*/
+	UE_LOG(LogTemp, Warning, TEXT("Type of the plot: %s\n"), *(type));
 
-	vectorscount = intdata->veccount;
+	vectorscount2 = intdata->veccount;
 	for (int i = 0; i < vectorscount; i++) {
-		/*UE_LOG(LogTemp, Warning, TEXT("Vector number: %d"), i);
+		UE_LOG(LogTemp, Warning, TEXT("Vector number: %d"), i);
 
 		FString vecname = intdata->vecs[i]->vecname;
-		UE_LOG(LogTemp, Warning, TEXT("Vector name: %s\n"), *(vecname));*/
+		UE_LOG(LogTemp, Warning, TEXT("Vector name: %s\n"), *(vecname));
 
 		vectors[i] = (dvec*)intdata->vecs[i]->pdvec;
 
-		/*FString vectorname = vector->v_name;
+		FString vectorname = vector->v_name;
 		UE_LOG(LogTemp, Warning, TEXT("Vector name: %s\n"), *(vectorname));
 
 		double * vectorvalue = vector->v_realdata;
@@ -171,7 +170,7 @@ int ng_initdata(pvecinfoall intdata, int ident, void* userdata)
 		for (int i = 0; i < vector->v_length; i++) {
 		FString value = FString::SanitizeFloat(vectorvalue[i]);
 		UE_LOG(LogTemp, Warning, TEXT("Vector value %d: %s\n"),i , *(value));
-		}*/
+		}
 	}
 
 	return 0;
@@ -179,15 +178,13 @@ int ng_initdata(pvecinfoall intdata, int ident, void* userdata)
 
 int ng_data(pvecvaluesall vdata, int numvecs, int ident, void* userdata)
 {
-	// tie init vektory su tam,, to nebudeme vytvarat, z initdata len zoberieme ukazatele a potom ich postupne zobrazime do logu,, napr tu rovno si mozem nejaku funkciu vytvorit ze plnenie 
-
-	/*int i;
+	int i;
 	for (i = 0; i < numvecs; i++) {
 	//UE_LOG(LogTemp, Warning, TEXT("tu sa vektor vypisuje data"));
 	FString name = vdata->vecsa[i]->name;
 	FString value = FString::SanitizeFloat(vdata->vecsa[i]->creal);
 	UE_LOG(LogTemp, Warning, TEXT("Vector: %s a jeho hodnota: %s\n"), *(name), *(value));
-	}*/
+	}
 
 	return 0;
-}
+}*/

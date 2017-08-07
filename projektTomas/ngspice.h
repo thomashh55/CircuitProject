@@ -16,14 +16,15 @@ public:
 	static NgSpice &getInstance();
 
 	// Vectors returned from simulation
-	//static dvec ** vectors; // toto este upravit na presny pocet podla suciastok
+	//static dvec ** resultVectors; // neviem preco toto mi tu nejde spravit
+	//static int resultVectorsCount;
 
 	// Adds circuit for returned values
 	virtual void AddCircuit(ACircuit *circuit);
 	virtual void RemoveCircuit(ACircuit *circuit);
 
 	// Callback function for results
-	static void setCallbackForResults(void(*callbackFunction)());
+	static void setCallbackForResults(void(*callbackFunction)(dvec ** vectors, int vectorscount));
 
 	// NgSpice commands
 	virtual int Init();

@@ -12,6 +12,16 @@ AVoltageSource::AVoltageSource()
 
 }
 
+double * AVoltageSource::GetSimulatedCurrent()
+{
+	return m_simulatedCurrent;
+}
+
+void AVoltageSource::SetSimulatedCurrent(double * simulatedCurrent)
+{
+	m_simulatedCurrent = simulatedCurrent;
+}
+
 // Getters and Setters
 double AVoltageSource::GetDirectCurrent()
 {

@@ -10,6 +10,7 @@
 #include "ngspice.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ngspice/dvec.h"
 #include "Circuit.generated.h"
 
 //Circuit Log
@@ -23,6 +24,11 @@ class MYPROJECT2_API ACircuit : public AActor
 public:
 	// Sets default values for this actor's properties
 	ACircuit();
+	~ACircuit();
+	float time;
+
+	static TArray<AComponent*> m_componentArray;
+	static TArray<ACircNode*> m_circNodeArray;
 
 protected:
 	// Called when the game starts or when spawned
@@ -48,8 +54,10 @@ public:
 	// Debug purpose
 	virtual void Report(const FString& report);
 
-private:
-	TArray<AComponent*> m_componentArray;
-	TArray<ACircNode*> m_circNodeArray;
+	// Measure functions for multimeter
+	float MeasureCurrent(AWire wire, float time);
+	float MeasureCurrent(AWire wire);
+	float MeasureVoltage(ACircNode node, float time);
+	float MeasureVoltage(ACircNode node);
 
 };

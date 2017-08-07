@@ -18,7 +18,9 @@ public:
 
 	// Getters and Setters
 	double GetDirectCurrent();
-	void SetDirectCurrent(double m_directCurrent);
+	void SetDirectCurrent(double directCurrent);
+	double * GetSimulatedCurrent();
+	void SetSimulatedCurrent(double * simulatedCurrent);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,5 +39,5 @@ public:
 private:
 	static const FString m_prefix;
 	double m_directCurrent;
-
+	double * m_simulatedCurrent;
 };

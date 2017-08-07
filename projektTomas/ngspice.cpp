@@ -153,6 +153,7 @@ int NgSpice::cbSendData(pvecvaluesall what, int num, int id, void *user)
 }
 
 dvec ** vectors;
+int vectorscount;
 int NgSpice::cbSendInitData(pvecinfoall what, int id, void *user)
 {
 	/*
@@ -175,24 +176,27 @@ int NgSpice::cbSendInitData(pvecinfoall what, int id, void *user)
 	*/
 
 	vectors = new dvec*[100];
-	int vectorscount = what->veccount;
+	vectorscount = what->veccount;
 	for (int i = 0; i < vectorscount; i++) {
 		vectors[i] = (dvec*)what->vecs[i]->pdvec;
 	}
+
+	//resultVectorsCount = vectorscount;
+	//resultVectors = vectors;
 
 	return 0;
 }
 
 bool showresults = false;
-void NgSpice::setCallbackForResults(void(*callbackFunction)()) {
+void NgSpice::setCallbackForResults(void(*callbackFunction)(dvec ** vectors, int vectorscount)) {
 	//UE_LOG(LogTemp, Warning, TEXT("ZAVOLAVANA CALLBACK Z NGSPICE"));
 
 	for (;;) {
-		Sleep(10);
+		Sleep(5);
 
 		if (showresults) {
 			//UE_LOG(LogTemp, Warning, TEXT("bg FINISHED running\n"));
-			callbackFunction();
+			callbackFunction(vectors, vectorscount);
 			break;
 		}
 	}
@@ -210,7 +214,7 @@ int NgSpice::cbBGThreadRunning(bool is_not_running, int id, void *user)
 	}*/
 
 	if (is_not_running) {
-		UE_LOG(LogTemp, Warning, TEXT("bg not running\n"));
+		//UE_LOG(LogTemp, Warning, TEXT("bg not running\n"));
 
 		if (wasrunning == true) {
 			showresults = true;
@@ -220,7 +224,7 @@ int NgSpice::cbBGThreadRunning(bool is_not_running, int id, void *user)
 		wasrunning = false;
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("bg running\n"));
+		//UE_LOG(LogTemp, Warning, TEXT("bg running\n"));
 		wasrunning = true;
 	}
 

@@ -20,12 +20,12 @@ void ACircNode::SetId(int32 id)
 	m_id = id;
 }
 
-double ACircNode::GetVoltage()
+double * ACircNode::GetVoltage()
 {
 	return m_voltage;
 }
 
-void ACircNode::SetVoltage(double voltage)
+void ACircNode::SetVoltage(double * voltage)
 {
 	m_voltage = voltage;
 }

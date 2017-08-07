@@ -18,8 +18,8 @@ public:
 	// Getters and Setters
 	int32 GetId();
 	void SetId(int32 id);
-	double GetVoltage();
-	void SetVoltage(double voltage);
+	double * GetVoltage();
+	void SetVoltage(double * voltage);
 	
 protected:
 	// Called when the game starts or when spawned
@@ -31,6 +31,6 @@ public:
 
 private:
 	int32 m_id;
-	double m_voltage;
+	double * m_voltage;
 
 };
