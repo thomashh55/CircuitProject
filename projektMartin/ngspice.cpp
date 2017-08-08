@@ -107,33 +107,33 @@ bool NgSpice::SetBreakpoint(double time)
 
 int NgSpice::cbSendChar(char *data, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
 	if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("CbSendChar: " + FString(data) +
 			" Id: " + FString::FromInt(id));
-	}*/
+	}
     return 0;
 }
 
 int NgSpice::cbSendStat(char *data, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
 	if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("CbSendStat: " + FString(data) +
 			" Id: " + FString::FromInt(id));
-	}*/
+	}
     return 0;
 }
 
 int NgSpice::cbControlledExit(int status, bool immediate, bool exit_upon_quit, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
 	if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("Status: " + FString::FromInt(status) +
 			" Immediate: " + FString::FromInt(immediate) +
 			" Exit_upon_quit: " + FString::FromInt(exit_upon_quit) +
 			" Id: " + FString::FromInt(id));
-	}*/
+	}
 	return 0;
 }
 
@@ -143,16 +143,6 @@ int NgSpice::cbSendData(pvecvaluesall data, int num, int id, void *user)
 
 	if (ngspice->m_circuit) {
 		ngspice->m_circuit->FillResults(data);
-	}
-
-	for (int i = 0; i < data->veccount; i++) {
-		if (FString("time").Equals(data->vecsa[i]->name, ESearchCase::IgnoreCase) 
-			&& data->vecsa[i]->creal >= ngspice->m_endTime) {
-			ngspice->m_bIsSimulating = false;
-			ngspice->m_circuit->Report("CbSendData: ends");
-			ngspice->Command("destroy");
-			//ngspice->Command("remcirc");
-		}
 	}
 
 	/*if (ngspice->m_circuit) {
@@ -175,7 +165,7 @@ int NgSpice::cbSendData(pvecvaluesall data, int num, int id, void *user)
 
 int NgSpice::cbSendInitData(pvecinfoall data, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
 	if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("CbSendInitData:");
 		ngspice->m_circuit->Report("Name: " + FString(data->name));
@@ -190,16 +180,26 @@ int NgSpice::cbSendInitData(pvecinfoall data, int id, void *user)
 		}
 		ngspice->m_circuit->Report("Id: " + FString::FromInt(id));
 		ngspice->m_circuit->Report(" ");
-	}*/
+	}
 	return 0;
 }
 
 int NgSpice::cbBGThreadRunning(bool is_running, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	
+	if (is_running) {
+		ngspice->m_bIsSimulating = false;
+		if (ngspice->m_circuit) {
+			ngspice->m_circuit->Report("CbSendData: ends");
+		}
+		//ngspice->Command("destroy");
+		//ngspice->Command("remcirc");
+	}
+
 	if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("IsRunning: " + FString(is_running ? "true" : "false") +
 			" Id: " + FString::FromInt(id));
-	}*/
+	}
     return 0;
 }

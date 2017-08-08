@@ -187,7 +187,7 @@ void ATester::PressedU()
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating nodes and components for schema 1"));
 
 	t1_voltageSource1 = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
-	t1_voltageSource1->SetDirectCurrent(9);
+	t1_voltageSource1->SetDirectCurrent(3.7);
 	t1_circuit->AddComponent(t1_voltageSource1);
 
 	t1_diode1 = GetWorld()->SpawnActor<ADiode>(ADiode::StaticClass());
@@ -197,28 +197,28 @@ void ATester::PressedU()
 	t1_circuit->AddComponent(t1_diode2);
 
 	t1_resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
-	t1_resistor1->SetResistance(100);
+	t1_resistor1->SetResistance(1000);
 	t1_circuit->AddComponent(t1_resistor1);
 
 	t1_resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
-	t1_resistor2->SetResistance(100);
+	t1_resistor2->SetResistance(5000);
 	t1_circuit->AddComponent(t1_resistor2);
 
 	t1_resistor3 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
-	t1_resistor3->SetResistance(100);
+	t1_resistor3->SetResistance(5000);
 	t1_circuit->AddComponent(t1_resistor3);
 
 	t1_resistor4 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
-	t1_resistor4->SetResistance(100);
+	t1_resistor4->SetResistance(1000);
 	t1_circuit->AddComponent(t1_resistor4);
 
 	t1_capacitor1 = GetWorld()->SpawnActor<ACapacitor>(ACapacitor::StaticClass());
-	t1_capacitor1->SetCapacitance(0.1);
+	t1_capacitor1->SetCapacitance(0.0022);
 	t1_capacitor1->SetInitVoltage(1);
 	t1_circuit->AddComponent(t1_capacitor1);
 
 	t1_capacitor2 = GetWorld()->SpawnActor<ACapacitor>(ACapacitor::StaticClass());
-	t1_capacitor2->SetCapacitance(0.1);
+	t1_capacitor2->SetCapacitance(0.0022);
 	t1_circuit->AddComponent(t1_capacitor2);
 
 	t1_transistor1 = GetWorld()->SpawnActor<ATransistor>(ATransistor::StaticClass());
@@ -303,7 +303,8 @@ void ATester::PressedG()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: G Pressed"));
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Time: %f"), t0_circuit->GetTime());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t0_circuit->GetRealTime());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t0_circuit->GetSimulationTime());
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current: %f"), t0_circuit->MeasureCurrent(t0_wire1));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire1->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
@@ -331,7 +332,8 @@ void ATester::PressedH()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: H Pressed"));
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Time: %f"), t1_circuit->GetTime());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t1_circuit->GetRealTime());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t1_circuit->GetSimulationTime());
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: MB1 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor1->GetCircNodeArray()[1], t1_voltageSource1->GetCircNodeArray()[1]));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: MB2 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor2->GetCircNodeArray()[1], t1_voltageSource1->GetCircNodeArray()[1]));
@@ -359,7 +361,7 @@ void ATester::PressedK()
 void ATester::PressedL()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: L Pressed"));
-	//NgSpice::getInstance().Command("destroy");
+	NgSpice::getInstance().Command("destroy");
 }
 
 void ATester::PressedC()
@@ -369,9 +371,6 @@ void ATester::PressedC()
 	if (t0_circuit->Start(100)) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors started"));
 	}
-	/*if (t1_circuit->Start(100)) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 started"));
-	}*/
 }
 
 void ATester::PressedV()

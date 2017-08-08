@@ -82,7 +82,8 @@ bool ACircuit::Start(float time)
 	}
 
 	// Reset time and start simulation
-	if (!ngspice.AddCircuit(this, time)) {
+	bool bCanRun = ngspice.AddCircuit(this, time);
+	if (bCanRun) {
 		m_timeArray.Empty();
 		m_endTime = time;
 		m_realTime = 0;
@@ -99,26 +100,40 @@ bool ACircuit::Start(float time)
 			UE_LOG(CircuitLog, Warning, TEXT("Circuit: %s"), *component->GetCircLine());
 			ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
 		}
+		ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline .tran ") + 
+			FString::SanitizeFloat(time / 1000) + FString(" ") + 
+			FString::SanitizeFloat(time) + FString(" uic"))));
 		ngspice.Command("circbyline .end");
-		ngspice.Command(TCHAR_TO_ANSI(*(FString("tran 0.01 ") + FString::FromInt(time) + FString(" uic"))));
+		ngspice.Command("bg_run");
+		/*ngspice.Command(TCHAR_TO_ANSI(*(FString("tran ") + 
+			FString::SanitizeFloat(time / 10) + FString(" ") + 
+			FString::SanitizeFloat(time) + FString(" uic"))));*/
 	}
-	return m_bIsRunning;
+	return bCanRun;
 }
 
-float ACircuit::GetTime()
+float ACircuit::GetRealTime()
 {
 	return m_realTime;
+}
+
+float ACircuit::GetSimulationTime()
+{
+	if (m_timeArray.Num() == 0) {
+		return 0;
+	}
+	return m_timeArray[m_realTimeIndex];
 }
 
 // Updates results in components
 void ACircuit::FillResults(pvecvaluesall data)
 {
+	UE_LOG(CircuitLog, Warning, TEXT("Circuit: data %d arrived"), data->vecindex);
 	for (int i = 0; i < data->veccount; i++) {
 		if (data->vecsa[i]->name[1] == '(') {
 			for (ACircNode *circNode : m_circNodeArray) {
 				FString id = FString("V(") + FString::FromInt(circNode->GetId()) + FString(")");
 				if (id.Equals(data->vecsa[i]->name, ESearchCase::IgnoreCase)) {
-					//UE_LOG(CircuitLog, Warning, TEXT("prave sa naplnil node s menom: %s\n"), *data->vecsa[i]->name);
 					circNode->AddVoltage(data->vecsa[i]->creal);
 				}
 			}
@@ -130,7 +145,6 @@ void ACircuit::FillResults(pvecvaluesall data)
 			for (AComponent *component : m_componentArray) {
 				FString id = component->GetId() + FString("#branch");
 				if (id.Equals(data->vecsa[i]->name, ESearchCase::IgnoreCase)) {
-					//UE_LOG(CircuitLog, Warning, TEXT("prave sa naplnil voltage dummy s menom: %s\n"), *data->vecsa[i]->name);
 					component->AddCurrent(data->vecsa[i]->creal);
 				}
 			}
@@ -142,6 +156,9 @@ void ACircuit::FillResults(pvecvaluesall data)
 double ACircuit::MeasureCurrent(AWire *wire, float time) {
 	if (time >= m_endTime) {
 		return wire->GetCurrent(m_timeArray.Num() - 1);
+	}
+	if (m_timeArray.Num() == 1) {
+		return wire->GetCurrent(0);
 	}
 	for (int i = 0; i < m_timeArray.Num() - 1; i++) {
 		if (m_timeArray[i + 1] >= time) {
@@ -158,6 +175,9 @@ double ACircuit::MeasureCurrent(AWire *wire) {
 double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time) {
 	if (time >= m_endTime) {
 		return circNode1->GetVoltage(m_timeArray.Num() - 1) - circNode2->GetVoltage(m_timeArray.Num() - 1);
+	}
+	if (m_timeArray.Num() == 1) {
+		return circNode1->GetVoltage(0) - circNode2->GetVoltage(0);
 	}
 	for (int i = 0; i < m_timeArray.Num() - 1; i++) {
 		if (m_timeArray[i + 1] >= time) {

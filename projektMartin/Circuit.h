@@ -45,7 +45,8 @@ public:
 	
 	// Simulation commands
 	virtual bool Start(float time);
-	virtual float GetTime();
+	virtual float GetRealTime();
+	virtual float GetSimulationTime();
 
 	// Updates results in components
 	virtual void FillResults(pvecvaluesall data);
