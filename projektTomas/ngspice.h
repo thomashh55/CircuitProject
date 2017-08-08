@@ -14,17 +14,19 @@ class NgSpice {
 public:
 	// Returns singleton instance
 	static NgSpice &getInstance();
+	static dvec ** vectors;
+	static int vectorscount;
 
 	// Vectors returned from simulation
 	//static dvec ** resultVectors; // neviem preco toto mi tu nejde spravit
 	//static int resultVectorsCount;
 
 	// Adds circuit for returned values
-	virtual void AddCircuit(ACircuit *circuit);
+	virtual int AddCircuit(ACircuit *circuit);
 	virtual void RemoveCircuit(ACircuit *circuit);
 
 	// Callback function for results
-	static void setCallbackForResults(void(*callbackFunction)(dvec ** vectors, int vectorscount));
+	void setCallbackForResults(int indexToCircuitArray);
 
 	// NgSpice commands
 	virtual int Init();

@@ -84,6 +84,37 @@ void AMyActor::BeginPlay()
 
 	circuit->Start();
 
+	/*circuit->Destroy();
+
+	circuit2 = GetWorld()->SpawnActor<ACircuit>(ACircuit::StaticClass());
+
+	AVoltageSource *voltageSource2 = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
+	voltageSource2->SetDirectCurrent(9);
+	circuit2->AddComponent(voltageSource2);
+
+	AResistor *resistor12 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor12->SetResistance(3);
+	circuit2->AddComponent(resistor12);
+
+	AResistor *resistor22 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor22->SetResistance(10);
+	circuit2->AddComponent(resistor22);
+
+	AResistor *resistor32 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor32->SetResistance(5);
+	circuit2->AddComponent(resistor32);
+
+	circuit2->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		voltageSource2->GetCircNodeArray()[1], resistor12->GetCircNodeArray()[0]);
+	circuit2->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor12->GetCircNodeArray()[1], resistor22->GetCircNodeArray()[0]);
+	circuit2->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor22->GetCircNodeArray()[1], resistor32->GetCircNodeArray()[0]);
+	circuit2->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
+		resistor32->GetCircNodeArray()[1], voltageSource2->GetCircNodeArray()[0]);
+
+	circuit2->Start();*/
+
 }
 
 // Called every frame

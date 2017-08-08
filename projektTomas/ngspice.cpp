@@ -16,13 +16,20 @@ NgSpice& NgSpice::getInstance()
 	return instance;
 }
 
-void NgSpice::AddCircuit(ACircuit *circuit)
+int NgSpice::AddCircuit(ACircuit *circuit)
 {
-	m_circuitArray.Add(circuit);
+	return m_circuitArray.Add(circuit);
 }
 
 void NgSpice::RemoveCircuit(ACircuit *circuit)
 {
+	int startindex;
+	m_circuitArray.Find(circuit,startindex);
+
+	for (int i = startindex+1; i < m_circuitArray.Num() ; i++) {
+		m_circuitArray[i]->SetindexToCircuitArray(i-1);
+	}
+
 	m_circuitArray.Remove(circuit);
 }
 
@@ -152,12 +159,12 @@ int NgSpice::cbSendData(pvecvaluesall what, int num, int id, void *user)
 	return 0;
 }
 
-dvec ** vectors;
-int vectorscount;
+dvec ** NgSpice::vectors;
+int NgSpice::vectorscount;
 int NgSpice::cbSendInitData(pvecinfoall what, int id, void *user)
 {
-	/*
-	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	
+	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
 	for (ACircuit *circuit : ngspice->m_circuitArray) {
 		circuit->Report("CbSendInitData:");
 		circuit->Report("Name: " + FString(what->name));
@@ -172,8 +179,8 @@ int NgSpice::cbSendInitData(pvecinfoall what, int id, void *user)
 		}
 		circuit->Report("Id: " + FString::FromInt(id));
 		circuit->Report(" ");
-	}
-	*/
+	}*/
+	
 
 	vectors = new dvec*[100];
 	vectorscount = what->veccount;
@@ -188,7 +195,7 @@ int NgSpice::cbSendInitData(pvecinfoall what, int id, void *user)
 }
 
 bool showresults = false;
-void NgSpice::setCallbackForResults(void(*callbackFunction)(dvec ** vectors, int vectorscount)) {
+void NgSpice::setCallbackForResults(int indexToCircuitArray) {
 	//UE_LOG(LogTemp, Warning, TEXT("ZAVOLAVANA CALLBACK Z NGSPICE"));
 
 	for (;;) {
@@ -196,7 +203,7 @@ void NgSpice::setCallbackForResults(void(*callbackFunction)(dvec ** vectors, int
 
 		if (showresults) {
 			//UE_LOG(LogTemp, Warning, TEXT("bg FINISHED running\n"));
-			callbackFunction(vectors, vectorscount);
+			m_circuitArray[indexToCircuitArray]->FillResults();
 			break;
 		}
 	}

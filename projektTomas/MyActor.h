@@ -24,6 +24,7 @@ public:
 	// Sets default values for this actor's properties
 	AMyActor();
 	ACircuit *circuit;
+	ACircuit *circuit2;
 
 protected:
 	// Called when the game starts or when spawned

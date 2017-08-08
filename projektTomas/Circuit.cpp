@@ -4,9 +4,6 @@
 //Circuit Log
 //DEFINE_LOG_CATEGORY(CircuitLog);
 
-TArray<AComponent*> ACircuit::m_componentArray;
-TArray<ACircNode*> ACircuit::m_circNodeArray;
-
 // Sets default values
 ACircuit::ACircuit()
 {
@@ -16,8 +13,7 @@ ACircuit::ACircuit()
 
 ACircuit::~ACircuit()
 {
-	ACircuit::m_componentArray.Empty();
-	ACircuit::m_circNodeArray.Empty();
+	NgSpice::getInstance().RemoveCircuit(this);
 }
 
 // Getters and Setters
@@ -39,6 +35,14 @@ void ACircuit::SetCircNodeArray(TArray<ACircNode*> circNodeArray)
 m_circNodeArray = circNodeArray;
 }*/
 
+void ACircuit::SetindexToCircuitArray(int index) {
+	indexToCircuitArray = index;
+}
+
+int ACircuit::GetindexToCircuitArray() {
+	return indexToCircuitArray;
+}
+
 // Called when the game starts or when spawned
 void ACircuit::BeginPlay()
 {
@@ -46,7 +50,7 @@ void ACircuit::BeginPlay()
 	time = 0;
 
 	// Adds this circuit to NgSpice
-	NgSpice::getInstance().AddCircuit(this);
+	indexToCircuitArray = NgSpice::getInstance().AddCircuit(this);
 }
 
 // Called before destroing the actor
@@ -94,42 +98,42 @@ float ACircuit::MeasureVoltage(ACircNode node) {
 // Adds component to the circuit
 void ACircuit::AddComponent(AComponent *component)
 {
-	ACircuit::m_componentArray.Add(component);
+	m_componentArray.Add(component);
 	for (ACircNode *node : component->GetCircNodeArray()) {
-		ACircuit::m_circNodeArray.Add(node);
+		m_circNodeArray.Add(node);
 	}
 }
 
 // Adds wires to the circuit
 void ACircuit::AddWire(AWire *wire, ACircNode *circNode1, ACircNode *circNode2)
 {
-	ACircuit::m_componentArray.Add(wire);
+	m_componentArray.Add(wire);
 	wire->AddCircNodes(circNode1, circNode2);
 }
 
 // Get array of components
 TArray<AComponent*> ACircuit::GetComponentArray()
 {
-	return ACircuit::m_componentArray;
+	return m_componentArray;
 }
 
-void cbFillResults(dvec ** vectors, int vectorscount) {
-	for (int i = 0; i < vectorscount; i++) {
-		double * vectorvalue = vectors[i]->v_realdata;
+void ACircuit::FillResults() {
+	for (int i = 0; i < NgSpice::vectorscount; i++) {
+		double * vectorvalue = NgSpice::vectors[i]->v_realdata;
 
-		if ( (vectors[i]->v_name)[0] == 'V' ) {
-			for (ACircNode *circNode : ACircuit::m_circNodeArray) {
-				if ( circNode->GetId() == (int) ( (vectors[i]->v_name)[2] - '0' ) ) {
+		if ( (NgSpice::vectors[i]->v_name)[0] == 'V' ) {
+			for (ACircNode *circNode : m_circNodeArray) {
+				if ( circNode->GetId() == (int) ( (NgSpice::vectors[i]->v_name)[2] - '0' ) ) {
 					//UE_LOG(LogTemp, Warning, TEXT("prave sa naplnil node s menom: %s\n"), *(FString(vectors[i]->v_name)));
 					circNode->SetVoltage(vectorvalue);
 				}
 			}
 		}
 		else {
-			for (AComponent *component : ACircuit::m_componentArray) {
-				if (component->GetCircLine()[1] == (TCHAR)(vectors[i]->v_name)[1]) {
+			for (AComponent *component : m_componentArray) {
+				if (component->GetCircLine()[1] == (TCHAR)(NgSpice::vectors[i]->v_name)[1]) {
 					//UE_LOG(LogTemp, Warning, TEXT("prave sa naplnil voltage dummy s menom: %s\n"), *(FString(vectors[i]->v_name)));
-					UE_LOG(LogTemp, Warning, TEXT("dlzka vektora je %d\n"), vectors[i]->v_length);
+					UE_LOG(LogTemp, Warning, TEXT("dlzka vektora je %d\n"), NgSpice::vectors[i]->v_length);
 					((AVoltageSource*)component)->SetSimulatedCurrent(vectorvalue);
 				}
 			}
@@ -145,10 +149,10 @@ void ACircuit::Start()
 	NgSpice &ngspice = NgSpice::getInstance();
 
 	ngspice.Command("circbyline schema");
-	for (ACircNode *circNode : ACircuit::m_circNodeArray) {
+	for (ACircNode *circNode : m_circNodeArray) {
 		circNode->SetId(m_circNodeCounter++);
 	}
-	for (AComponent *component : ACircuit::m_componentArray) {
+	for (AComponent *component : m_componentArray) {
 		component->SetId(m_componentCounter++);
 		UE_LOG(LogTemp, Warning, TEXT("Circuit: %s"), *component->GetCircLine());
 		ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
@@ -160,7 +164,12 @@ void ACircuit::Start()
 	ngspice.Command("circbyline .end");
 	ngspice.Command("bg_run");
 
-	ngspice.setCallbackForResults(cbFillResults);
+	ngspice.setCallbackForResults(indexToCircuitArray);
+
+	//ngspice.Command("destroy all");
+	//ngspice.Command("reset");
+	//ngspice.Command("setcirc schema");
+	//ngspice.Command("remcirc");
 }
 
 void ACircuit::Report(const FString& report)

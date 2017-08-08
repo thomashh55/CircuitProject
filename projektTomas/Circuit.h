@@ -27,9 +27,6 @@ public:
 	~ACircuit();
 	float time;
 
-	static TArray<AComponent*> m_componentArray;
-	static TArray<ACircNode*> m_circNodeArray;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -60,4 +57,13 @@ public:
 	float MeasureVoltage(ACircNode node, float time);
 	float MeasureVoltage(ACircNode node);
 
+	void FillResults();
+
+	int GetindexToCircuitArray();
+	void SetindexToCircuitArray(int index);
+
+private:
+	TArray<AComponent*> m_componentArray;
+	TArray<ACircNode*> m_circNodeArray;
+	int indexToCircuitArray;
 };
