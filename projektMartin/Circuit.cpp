@@ -20,9 +20,10 @@ void ACircuit::BeginPlay()
 	Super::BeginPlay();
 
 	// Reset time
-	m_time = 0;
-	m_timeIndex = 0;
 	m_timeArray.Empty();
+	m_endTime = 0;
+	m_realTime = 0;
+	m_realTimeIndex = 0;
 	m_bIsRunning = false;
 }
 
@@ -33,15 +34,16 @@ void ACircuit::Tick(float DeltaTime)
 
 	// Adds time
 	if (m_bIsRunning) {
-		m_time += DeltaTime;
-		while (m_timeIndex < m_timeArray.Num() - 1 && m_timeArray[m_timeIndex + 1] < m_time) {
-			m_timeIndex++;
+		m_realTime += DeltaTime;
+		while (m_realTimeIndex < m_timeArray.Num() - 1 && m_timeArray[m_realTimeIndex + 1] < m_realTime) {
+			m_realTimeIndex++;
+			//UE_LOG(CircuitLog, Warning, TEXT("Circuit: Time: %f ArrayTime: %f index: %d"), m_realTime, m_timeArray[m_realTimeIndex], m_realTimeIndex);
 		}
 
 		// Stop simulation
-		if (m_time >= 11) {
+		if (m_realTime >= m_endTime) {
 			m_bIsRunning = false;
-			UE_LOG(CircuitLog, Warning, TEXT("Circuit: 11 seconds passed"));
+			UE_LOG(CircuitLog, Warning, TEXT("Circuit: %f seconds passed"), m_endTime);
 		}
 	}
 }
@@ -69,17 +71,22 @@ TArray<AComponent*> ACircuit::GetComponentArray()
 }
 
 // Simulation commands
-void ACircuit::Start()
+bool ACircuit::Start(float time)
 {
 	NgSpice &ngspice = NgSpice::getInstance();
-	int32 m_componentCounter = 0;
-	int32 m_circNodeCounter = 0;
+	int m_componentCounter = 0;
+	int m_circNodeCounter = 0;
+
+	if (time < 0) {
+		time = 0;
+	}
 
 	// Reset time and start simulation
-	if (ngspice.AddCircuit(this)) {
-		m_time = 0;
-		m_timeIndex = 0;
+	if (ngspice.AddCircuit(this, time)) {
 		m_timeArray.Empty();
+		m_endTime = time;
+		m_realTime = 0;
+		m_realTimeIndex = 0;
 		m_bIsRunning = true;
 		ngspice.Command("circbyline schema");
 		for (ACircNode *circNode : m_circNodeArray) {
@@ -93,8 +100,14 @@ void ACircuit::Start()
 			ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
 		}
 		ngspice.Command("circbyline .end");
-		ngspice.Command("tran 0.01 10 uic");
+		ngspice.Command(TCHAR_TO_ANSI(*(FString("tran 0.01 ") + FString::FromInt(time) + FString(" uic"))));
 	}
+	return m_bIsRunning;
+}
+
+float ACircuit::GetTime()
+{
+	return m_realTime;
 }
 
 // Updates results in components
@@ -127,7 +140,7 @@ void ACircuit::FillResults(pvecvaluesall data)
 
 // Measure functions for multimeter
 double ACircuit::MeasureCurrent(AWire *wire, float time) {
-	if (time >= 10) {
+	if (time >= m_endTime) {
 		return wire->GetCurrent(m_timeArray.Num() - 1);
 	}
 	for (int i = 0; i < m_timeArray.Num() - 1; i++) {
@@ -139,11 +152,11 @@ double ACircuit::MeasureCurrent(AWire *wire, float time) {
 }
 
 double ACircuit::MeasureCurrent(AWire *wire) {
-	return wire->GetCurrent(m_timeIndex);
+	return wire->GetCurrent(m_realTimeIndex);
 }
 
 double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time) {
-	if (time >= 10) {
+	if (time >= m_endTime) {
 		return circNode1->GetVoltage(m_timeArray.Num() - 1) - circNode2->GetVoltage(m_timeArray.Num() - 1);
 	}
 	for (int i = 0; i < m_timeArray.Num() - 1; i++) {
@@ -155,7 +168,7 @@ double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, floa
 }
 
 double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2) {
-	return circNode1->GetVoltage(m_timeIndex) - circNode2->GetVoltage(m_timeIndex);
+	return circNode1->GetVoltage(m_realTimeIndex) - circNode2->GetVoltage(m_realTimeIndex);
 }
 
 void ACircuit::Report(const FString& report)

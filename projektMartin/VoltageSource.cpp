@@ -12,6 +12,7 @@ AVoltageSource::AVoltageSource()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	m_directCurrent = 0;
 }
 
 // Getters and Setters

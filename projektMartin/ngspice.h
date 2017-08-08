@@ -13,7 +13,7 @@ public:
 	static NgSpice &getInstance();
 
 	// Adds circuit
-	virtual bool AddCircuit(ACircuit *circuit);
+	virtual bool AddCircuit(ACircuit *circuit, float time);
 
 	// NgSpice commands
 	virtual int Init();
@@ -40,6 +40,7 @@ private:
     static int cbBGThreadRunning(bool is_running, int id, void *user);
 
 	ACircuit *m_circuit;
+	float m_endTime;
 	bool m_bIsSimulating;
 
 };

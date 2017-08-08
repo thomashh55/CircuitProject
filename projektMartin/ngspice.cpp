@@ -18,13 +18,17 @@ NgSpice& NgSpice::getInstance()
 	return instance;
 }
 
-bool NgSpice::AddCircuit(ACircuit *circuit)
+bool NgSpice::AddCircuit(ACircuit *circuit, float time)
 {
-	if (!m_bIsSimulating) {
-		m_circuit = circuit;
-		m_bIsSimulating = true;
+	if (m_bIsSimulating) {
+		return false;
 	}
-	return m_bIsSimulating;
+	else {
+		m_circuit = circuit;
+		m_endTime = time;
+		m_bIsSimulating = true;
+		return true;
+	}
 }
 
 int NgSpice::Init()
@@ -142,7 +146,8 @@ int NgSpice::cbSendData(pvecvaluesall data, int num, int id, void *user)
 	}
 
 	for (int i = 0; i < data->veccount; i++) {
-		if (FString("time").Equals(data->vecsa[i]->name, ESearchCase::IgnoreCase) && data->vecsa[i]->creal >= 10) {
+		if (FString("time").Equals(data->vecsa[i]->name, ESearchCase::IgnoreCase) 
+			&& data->vecsa[i]->creal >= ngspice->m_endTime) {
 			ngspice->m_bIsSimulating = false;
 			ngspice->m_circuit->Report("CbSendData: ends");
 			//ngspice->Command("destroy");

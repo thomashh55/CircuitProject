@@ -17,7 +17,7 @@ public:
 
 	// Getters and Setters
 	double GetResistance();
-	void SetResistance(double m_resistance);
+	void SetResistance(double resistance);
 
 protected:
 	// Called when the game starts or when spawned

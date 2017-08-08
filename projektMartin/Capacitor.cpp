@@ -12,6 +12,8 @@ ACapacitor::ACapacitor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	m_capacitance = 0;
+	m_initVoltage = 0;
 }
 
 // Getters and Setters
@@ -23,6 +25,16 @@ double ACapacitor::GetCapacitance()
 void ACapacitor::SetCapacitance(double capacitance)
 {
 	m_capacitance = capacitance;
+}
+
+double ACapacitor::GetInitVoltage()
+{
+	return m_initVoltage;
+}
+
+void ACapacitor::SetInitVoltage(double initVoltage)
+{
+	m_initVoltage = initVoltage;
 }
 
 // Called when the game starts or when spawned
@@ -55,7 +67,8 @@ FString ACapacitor::GetCircLine()
 		return m_id + FString(" ") +
 			FString::FromInt(m_circNodeArray[0]->GetId()) + FString(" ") +
 			FString::FromInt(m_circNodeArray[1]->GetId()) + FString(" ") +
-			FString::SanitizeFloat(m_capacitance);
+			FString::SanitizeFloat(m_capacitance) + FString(" ic=") + 
+			FString::FromInt(m_initVoltage) + FString("V");
 	}
 	return FString();
 }

@@ -45,14 +45,46 @@ public:
 	virtual void PressedM();
 
 private:
-	ACircuit *circuit;
-	AVoltageSource *voltageSource1;
-	AResistor *resistor1;
-	AResistor *resistor2;
-	AResistor *resistor3;
-	AWire *wire1;
-	AWire *wire2;
-	AWire *wire3;
-	AWire *wire4;
+
+	// Serial resistors test
+	ACircuit *t0_circuit;
+	AVoltageSource *t0_voltageSource1;
+	AResistor *t0_resistor1;
+	AResistor *t0_resistor2;
+	AResistor *t0_resistor3;
+	AWire *t0_wire1;
+	AWire *t0_wire2;
+	AWire *t0_wire3;
+	AWire *t0_wire4;
+
+	// Schema 1 test
+	ACircuit *t1_circuit;
+	AVoltageSource *t1_voltageSource1;
+	ADiode *t1_diode1;
+	ADiode *t1_diode2;
+	AResistor *t1_resistor1;
+	AResistor *t1_resistor2;
+	AResistor *t1_resistor3;
+	AResistor *t1_resistor4;
+	ACapacitor *t1_capacitor1;
+	ACapacitor *t1_capacitor2;
+	ATransistor *t1_transistor1;
+	ATransistor *t1_transistor2;
+	AWire *t1_wire1;
+	AWire *t1_wire2;
+	AWire *t1_wire3;
+	AWire *t1_wire4;
+	AWire *t1_wire5;
+	AWire *t1_wire6;
+	AWire *t1_wire7;
+	AWire *t1_wire8;
+	AWire *t1_wire9;
+	AWire *t1_wire10;
+	AWire *t1_wire11;
+	AWire *t1_wire12;
+	AWire *t1_wire13;
+	AWire *t1_wire14;
+	AWire *t1_wire15;
+	AWire *t1_wire16;
 
 };

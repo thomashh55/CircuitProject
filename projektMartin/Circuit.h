@@ -44,7 +44,8 @@ public:
 	virtual TArray<AComponent*> GetComponentArray();
 	
 	// Simulation commands
-	virtual void Start();
+	virtual bool Start(float time);
+	virtual float GetTime();
 
 	// Updates results in components
 	virtual void FillResults(pvecvaluesall data);
@@ -62,9 +63,10 @@ private:
 	TArray<AComponent*> m_componentArray;
 	TArray<ACircNode*> m_circNodeArray;
 
-	bool m_bIsRunning;
 	TArray<double> m_timeArray;
-	float m_time;
-	int m_timeIndex;
+	float m_endTime;
+	float m_realTime;
+	int m_realTimeIndex;
+	bool m_bIsRunning;
 	
 };

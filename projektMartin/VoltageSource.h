@@ -17,7 +17,7 @@ public:
 
 	// Getters and Setters
 	double GetDirectCurrent();
-	void SetDirectCurrent(double m_directCurrent);
+	void SetDirectCurrent(double directCurrent);
 
 protected:
 	// Called when the game starts or when spawned

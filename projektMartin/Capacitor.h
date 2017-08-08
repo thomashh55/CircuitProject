@@ -17,7 +17,9 @@ public:
 
 	// Getters and Setters
 	double GetCapacitance();
-	void SetCapacitance(double m_capacitance);
+	void SetCapacitance(double capacitance);
+	double GetInitVoltage();
+	void SetInitVoltage(double initVoltage);
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,5 +38,6 @@ public:
 private:
 	static const FString m_prefix;
 	double m_capacitance;
+	double m_initVoltage;
 	
 };
