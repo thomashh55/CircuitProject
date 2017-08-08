@@ -15,11 +15,6 @@ public:
 	// Sets default values for this actor's properties
 	AComponent();
 
-	// Getters and Setters
-	/*double GetCurrent();
-	void SetCurrent(double current);*/
-	TArray<ACircNode*> GetCircNodeArray();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -28,16 +23,25 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Gets nodes of this component
+	TArray<ACircNode*> GetCircNodeArray();
+
 	// Getter and setter for component identifier
 	void SetId(int32 id);
+	FString GetId();
 	virtual FString GetPrefix();
 
 	// Returns line for NgSpice
 	virtual FString GetCircLine();
 
+	// Getters and setters for measurements
+	double GetCurrent(int index);
+	void AddCurrent(double current);
+	void ResetCurrentArray();
+
 protected:
 	FString m_id;
-	double m_current;
+	TArray<double> m_currentArray;
 	TArray<ACircNode*> m_circNodeArray;
 	
 };

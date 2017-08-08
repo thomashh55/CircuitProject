@@ -12,27 +12,6 @@ ACircNode::ACircNode()
 
 }
 
-// Getters and Setters
-int32 ACircNode::GetId()
-{
-	return m_id;
-}
-
-void ACircNode::SetId(int32 id)
-{
-	m_id = id;
-}
-
-double ACircNode::GetVoltage()
-{
-	return m_voltage;
-}
-
-void ACircNode::SetVoltage(double voltage)
-{
-	m_voltage = voltage;
-}
-
 // Called when the game starts or when spawned
 void ACircNode::BeginPlay()
 {
@@ -45,5 +24,35 @@ void ACircNode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+// Getter and setter for component identifier
+int32 ACircNode::GetId()
+{
+	return m_id;
+}
+
+void ACircNode::SetId(int32 id)
+{
+	m_id = id;
+}
+
+// Getters and setters for measurements
+double ACircNode::GetVoltage(int index)
+{
+	if (index < m_voltageArray.Num()) {
+		return m_voltageArray[index];
+	}
+	return 0;
+}
+
+void ACircNode::AddVoltage(double voltage)
+{
+	m_voltageArray.Add(voltage);
+}
+
+void ACircNode::ResetVoltageArray()
+{
+	m_voltageArray.Empty();
 }
 

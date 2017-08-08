@@ -128,30 +128,33 @@ void ATester::PressedY()
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating nodes and components"));
 
-	AVoltageSource *voltageSource = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
-	voltageSource->SetDirectCurrent(9);
-	circuit->AddComponent(voltageSource);
+	voltageSource1 = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
+	voltageSource1->SetDirectCurrent(9);
+	circuit->AddComponent(voltageSource1);
 
-	AResistor *resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	resistor1->SetResistance(3);
 	circuit->AddComponent(resistor1);
 
-	AResistor *resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	resistor2->SetResistance(10);
 	circuit->AddComponent(resistor2);
 
-	AResistor *resistor3 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	resistor3 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	resistor3->SetResistance(5);
 	circuit->AddComponent(resistor3);
 
-	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
-		voltageSource->GetCircNodeArray()[1], resistor1->GetCircNodeArray()[0]);
-	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
-		resistor1->GetCircNodeArray()[1], resistor2->GetCircNodeArray()[0]);
-	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
-		resistor2->GetCircNodeArray()[1], resistor3->GetCircNodeArray()[0]);
-	circuit->AddWire(GetWorld()->SpawnActor<AWire>(AWire::StaticClass()),
-		resistor3->GetCircNodeArray()[1], voltageSource->GetCircNodeArray()[0]);
+	wire1 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	circuit->AddWire(wire1, voltageSource1->GetCircNodeArray()[1], resistor1->GetCircNodeArray()[0]);
+
+	wire2 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	circuit->AddWire(wire2, resistor1->GetCircNodeArray()[1], resistor2->GetCircNodeArray()[0]);
+
+	wire3 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	circuit->AddWire(wire3, resistor2->GetCircNodeArray()[1], resistor3->GetCircNodeArray()[0]);
+
+	wire4 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	circuit->AddWire(wire4, resistor3->GetCircNodeArray()[1], voltageSource1->GetCircNodeArray()[0]);
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Nodes and components created"));
 }
@@ -159,25 +162,42 @@ void ATester::PressedY()
 void ATester::PressedU()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: U Pressed"));
-	NgSpice::getInstance().Command("bg_run");
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current: %f"), circuit->MeasureCurrent(wire1));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), circuit->MeasureVoltage(wire1->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0]));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current at time=5: %f"), circuit->MeasureCurrent(wire1, 5));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage at time=5: %f"), circuit->MeasureVoltage(wire1->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0], 5));
+	//NgSpice::getInstance().Command("bg_run");
 }
 
 void ATester::PressedI()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: I Pressed"));
-	NgSpice::getInstance().Command("bg_halt");
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current: %f"), circuit->MeasureCurrent(wire2));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage: %f"), circuit->MeasureVoltage(wire2->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0]));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current at time=5: %f"), circuit->MeasureCurrent(wire2, 5));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage at time=5: %f"), circuit->MeasureVoltage(wire2->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0], 5));
+	//NgSpice::getInstance().Command("bg_halt");
 }
 
 void ATester::PressedO()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: O Pressed"));
-	NgSpice::getInstance().Command("bg_resume");
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current: %f"), circuit->MeasureCurrent(wire3));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage: %f"), circuit->MeasureVoltage(wire3->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0]));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current at time=5: %f"), circuit->MeasureCurrent(wire3, 5));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage at time=5: %f"), circuit->MeasureVoltage(wire3->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0], 5));
+	//NgSpice::getInstance().Command("bg_resume");
 }
 
 void ATester::PressedP()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: P Pressed"));
-	NgSpice::getInstance().Command("bg_reset");
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current: %f"), circuit->MeasureCurrent(wire4));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage: %f"), circuit->MeasureVoltage(wire4->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0]));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current at time=5: %f"), circuit->MeasureCurrent(wire4, 5));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage at time=5: %f"), circuit->MeasureVoltage(wire4->GetCircNodeArray()[0], wire1->GetCircNodeArray()[0], 5));
+	//NgSpice::getInstance().Command("bg_reset");
+
 	//int8 iret = circuit->Command("bg_run");
 	//int8 iret = circuit->Command("bg_step");
 	//int8 iret = circuit->Command("bg_halt");
@@ -189,7 +209,7 @@ void ATester::PressedP()
 void ATester::PressedG()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: G Pressed"));
-	NgSpice::getInstance().Command("circbyline test");
+	/*NgSpice::getInstance().Command("circbyline test");
 	NgSpice::getInstance().Command("circbyline V1 0 1 9");
 	NgSpice::getInstance().Command("circbyline R2 2 3 3");
 	NgSpice::getInstance().Command("circbyline R3 4 5 10");
@@ -199,7 +219,7 @@ void ATester::PressedG()
 	NgSpice::getInstance().Command("circbyline V7 5 6 0");
 	NgSpice::getInstance().Command("circbyline V8 7 0 0");
 	NgSpice::getInstance().Command("circbyline .tran 0.1 2 uic");
-	NgSpice::getInstance().Command("circbyline .end");
+	NgSpice::getInstance().Command("circbyline .end");*/
 	//NgSpice::getInstance().Command("tran 0.1 2 uic");
 }
 
@@ -216,13 +236,13 @@ void ATester::PressedJ()
 void ATester::PressedK()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: K Pressed"));
-	NgSpice::getInstance().Command("remcirc");
+	//NgSpice::getInstance().Command("remcirc");
 }
 
 void ATester::PressedL()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: L Pressed"));
-	NgSpice::getInstance().Command("destroy");
+	//NgSpice::getInstance().Command("destroy");
 }
 
 void ATester::PressedC()
@@ -248,7 +268,7 @@ void ATester::PressedN()
 	UE_LOG(TesterLog, Warning, TEXT("Tester: N Pressed"));
 
 	char **plots = NgSpice::getInstance().GetAllPlots();
-	int8 i = 0;
+	int i = 0;
 	while (plots[i] != NULL) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Plot %d: %s"), i, *FString(plots[i]));
 		i++;
@@ -262,7 +282,7 @@ void ATester::PressedM()
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Plot name: %s"), *plotName);
 
 	char **vecs = NgSpice::getInstance().GetAllVecs(TCHAR_TO_ANSI(*plotName));
-	int8 i = 0;
+	int i = 0;
 	while (vecs[i] != NULL) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Vec %d: %s"), i, *FString(vecs[i]));
 		i++;

@@ -46,5 +46,13 @@ public:
 
 private:
 	ACircuit *circuit;
+	AVoltageSource *voltageSource1;
+	AResistor *resistor1;
+	AResistor *resistor2;
+	AResistor *resistor3;
+	AWire *wire1;
+	AWire *wire2;
+	AWire *wire3;
+	AWire *wire4;
 
 };

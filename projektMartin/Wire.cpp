@@ -14,17 +14,6 @@ AWire::AWire()
 
 }
 
-// Getters and Setters
-double AWire::GetCurrent()
-{
-	return m_current;
-}
-
-void AWire::SetCurrent(double current)
-{
-	m_current = current;
-}
-
 // Called when the game starts or when spawned
 void AWire::BeginPlay()
 {

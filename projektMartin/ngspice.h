@@ -12,9 +12,8 @@ public:
 	// Returns singleton instance
 	static NgSpice &getInstance();
 
-	// Adds circuit for returned values
-	virtual void AddCircuit(ACircuit *circuit);
-	virtual void RemoveCircuit(ACircuit *circuit);
+	// Adds circuit
+	virtual bool AddCircuit(ACircuit *circuit);
 
 	// NgSpice commands
 	virtual int Init();
@@ -40,6 +39,7 @@ private:
 	static int cbSendInitData(pvecinfoall what, int id, void *user);
     static int cbBGThreadRunning(bool is_running, int id, void *user);
 
-	TArray<ACircuit*> m_circuitArray;
+	ACircuit *m_circuit;
+	bool m_bIsSimulating;
 
 };

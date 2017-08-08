@@ -32,9 +32,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// Called before destroing the actor
-	virtual void BeginDestroy() override;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -49,11 +46,25 @@ public:
 	// Simulation commands
 	virtual void Start();
 
+	// Updates results in components
+	virtual void FillResults(pvecvaluesall data);
+
+	// Measure functions for multimeter
+	virtual double MeasureCurrent(AWire *wire, float time);
+	virtual double MeasureCurrent(AWire *wire);
+	virtual double MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time);
+	virtual double MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2);
+
 	// Debug purpose
 	virtual void Report(const FString& report);
 
 private:
 	TArray<AComponent*> m_componentArray;
 	TArray<ACircNode*> m_circNodeArray;
+
+	bool m_bIsRunning;
+	TArray<double> m_timeArray;
+	float m_time;
+	int m_timeIndex;
 	
 };

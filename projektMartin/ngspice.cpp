@@ -9,6 +9,7 @@ using namespace std;
 NgSpice::NgSpice()
 {
 	Init();
+	m_bIsSimulating = false;
 }
 
 NgSpice& NgSpice::getInstance()
@@ -17,14 +18,13 @@ NgSpice& NgSpice::getInstance()
 	return instance;
 }
 
-void NgSpice::AddCircuit(ACircuit *circuit)
+bool NgSpice::AddCircuit(ACircuit *circuit)
 {
-	m_circuitArray.Add(circuit);
-}
-
-void NgSpice::RemoveCircuit(ACircuit *circuit)
-{
-	m_circuitArray.Remove(circuit);
+	if (!m_bIsSimulating) {
+		m_circuit = circuit;
+		m_bIsSimulating = true;
+	}
+	return m_bIsSimulating;
 }
 
 int NgSpice::Init()
@@ -43,25 +43,25 @@ pvector_info NgSpice::GetVecInfo(char *vecname)
 {
 	pvector_info vi = ngGet_Vec_Info(vecname);
 
-	for (ACircuit *circuit : m_circuitArray) {
+	/*if (m_circuit) {
 		if (vi) {
-			circuit->Report("GetVecInfo:");
-			circuit->Report("V_name: " + FString(vi->v_name));
-			circuit->Report("V_type: " + FString::FromInt(vi->v_type));
-			circuit->Report("V_flags: " + FString::FromInt(vi->v_flags));
-			circuit->Report("V_length: " + FString::FromInt(vi->v_length));
+			m_circuit->Report("GetVecInfo:");
+			m_circuit->Report("V_name: " + FString(vi->v_name));
+			m_circuit->Report("V_type: " + FString::FromInt(vi->v_type));
+			m_circuit->Report("V_flags: " + FString::FromInt(vi->v_flags));
+			m_circuit->Report("V_length: " + FString::FromInt(vi->v_length));
 			for (int i = 0; i < vi->v_length; i++) {
-				circuit->Report("V_realdata " + FString::FromInt(i) + ": Value: " + FString::SanitizeFloat(vi->v_realdata[i]));
+				m_circuit->Report("V_realdata " + FString::FromInt(i) + ": Value: " + FString::SanitizeFloat(vi->v_realdata[i]));*/
 				/*reporter->Report("V_compdata " + FString::FromInt(i) +
 				": Cx_real: " + FString::SanitizeFloat(vi->v_compdata[i].cx_real) +
 				" Cx_imag: " + FString::SanitizeFloat(vi->v_compdata[i].cx_imag));*/ // Crashes otherwise
-			}
-			circuit->Report(" ");
+			/*}
+			m_circuit->Report(" ");
 		}
 		else {
-			circuit->Report("GetVecInfo: NULL");
+			m_circuit->Report("GetVecInfo: NULL");
 		}
-	}
+	}*/
 	return vi;
 }
 
@@ -101,85 +101,100 @@ bool NgSpice::SetBreakpoint(double time)
 	return bIsSet;
 }
 
-int NgSpice::cbSendChar(char *what, int id, void *user)
+int NgSpice::cbSendChar(char *data, int id, void *user)
 {
-	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	for (ACircuit *circuit : ngspice->m_circuitArray) {
-		circuit->Report("CbSendChar: " + FString(what) +
+	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	if (ngspice->m_circuit) {
+		ngspice->m_circuit->Report("CbSendChar: " + FString(data) +
 			" Id: " + FString::FromInt(id));
-	}
+	}*/
     return 0;
 }
 
-int NgSpice::cbSendStat(char *what, int id, void *user)
+int NgSpice::cbSendStat(char *data, int id, void *user)
 {
-	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	for (ACircuit *circuit : ngspice->m_circuitArray) {
-		circuit->Report("CbSendStat: " + FString(what) +
+	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	if (ngspice->m_circuit) {
+		ngspice->m_circuit->Report("CbSendStat: " + FString(data) +
 			" Id: " + FString::FromInt(id));
-	}
+	}*/
     return 0;
 }
 
 int NgSpice::cbControlledExit(int status, bool immediate, bool exit_upon_quit, int id, void *user)
 {
-	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	for (ACircuit *circuit : ngspice->m_circuitArray) {
-		circuit->Report("Status: " + FString::FromInt(status) +
+	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	if (ngspice->m_circuit) {
+		ngspice->m_circuit->Report("Status: " + FString::FromInt(status) +
 			" Immediate: " + FString::FromInt(immediate) +
 			" Exit_upon_quit: " + FString::FromInt(exit_upon_quit) +
 			" Id: " + FString::FromInt(id));
-	}
+	}*/
 	return 0;
 }
 
-int NgSpice::cbSendData(pvecvaluesall what, int num, int id, void *user)
+int NgSpice::cbSendData(pvecvaluesall data, int num, int id, void *user)
 {
 	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	for (ACircuit *circuit : ngspice->m_circuitArray) {
-		circuit->Report("CbSendData:");
-		circuit->Report("Veccount: " + FString::FromInt(what->veccount));
-		circuit->Report("Vecindex: " + FString::FromInt(what->vecindex));
-		for (int i = 0; i < what->veccount; i++) {
-			circuit->Report("Vecvalues " + FString::FromInt(i) + ": Name: " + FString(what->vecsa[i]->name));
-			circuit->Report("Vecvalues " + FString::FromInt(i) + ": Creal: " + FString::SanitizeFloat(what->vecsa[i]->creal));
-			/*ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Cimag: " + FString::SanitizeFloat(what->vecsa[i]->cimag));
-			ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Is_scale: " + FString(what->vecsa[i]->is_scale ? "true" : "false"));
-			ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Is_complex: " + FString(what->vecsa[i]->is_complex ? "true" : "false"));*/
-		}
-		circuit->Report("Id: " + FString::FromInt(id));
-		circuit->Report(" ");
+
+	if (ngspice->m_circuit) {
+		ngspice->m_circuit->FillResults(data);
 	}
+
+	for (int i = 0; i < data->veccount; i++) {
+		if (FString("time").Equals(data->vecsa[i]->name, ESearchCase::IgnoreCase) && data->vecsa[i]->creal >= 10) {
+			ngspice->m_bIsSimulating = false;
+			ngspice->m_circuit->Report("CbSendData: ends");
+			//ngspice->Command("destroy");
+			//ngspice->Command("remcirc");
+		}
+	}
+
+	/*if (ngspice->m_circuit) {
+		ngspice->m_circuit->Report("CbSendData:");
+		ngspice->m_circuit->Report("Num: " + FString::FromInt(num));
+		ngspice->m_circuit->Report("Veccount: " + FString::FromInt(data->veccount));
+		ngspice->m_circuit->Report("Vecindex: " + FString::FromInt(data->vecindex));
+		for (int i = 0; i < data->veccount; i++) {
+			ngspice->m_circuit->Report("Vecvalues " + FString::FromInt(i) + ": Name: " + FString(data->vecsa[i]->name));
+			ngspice->m_circuit->Report("Vecvalues " + FString::FromInt(i) + ": Creal: " + FString::SanitizeFloat(data->vecsa[i]->creal));*/
+			/*ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Cimag: " + FString::SanitizeFloat(data->vecsa[i]->cimag));
+			ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Is_scale: " + FString(data->vecsa[i]->is_scale ? "true" : "false"));
+			ngspice->m_reporter->Report("Vecvalues " + FString::FromInt(i) + ": Is_complex: " + FString(data->vecsa[i]->is_complex ? "true" : "false"));*/
+		/*}
+		ngspice->m_circuit->Report("Id: " + FString::FromInt(id));
+		ngspice->m_circuit->Report(" ");
+	}*/
 	return 0;
 }
 
-int NgSpice::cbSendInitData(pvecinfoall what, int id, void *user)
+int NgSpice::cbSendInitData(pvecinfoall data, int id, void *user)
 {
-	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	for (ACircuit *circuit : ngspice->m_circuitArray) {
-		circuit->Report("CbSendInitData:");
-		circuit->Report("Name: " + FString(what->name));
-		circuit->Report("Title: " + FString(what->title));
-		circuit->Report("Date: " + FString(what->date));
-		circuit->Report("Type: " + FString(what->type));
-		circuit->Report("Veccount: " + FString::FromInt(what->veccount));
-		for (int i = 0; i < what->veccount; i++) {
-			circuit->Report("VecInfo " + FString::FromInt(i) + ": Number: " + FString::FromInt(what->vecs[i]->number));
-			circuit->Report("VecInfo " + FString::FromInt(i) + ": Vecname: " + FString(what->vecs[i]->vecname));
-			circuit->Report("VecInfo " + FString::FromInt(i) + ": Is_real: " + FString(what->vecs[i]->is_real ? "true" : "false"));
+	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	if (ngspice->m_circuit) {
+		ngspice->m_circuit->Report("CbSendInitData:");
+		ngspice->m_circuit->Report("Name: " + FString(data->name));
+		ngspice->m_circuit->Report("Title: " + FString(data->title));
+		ngspice->m_circuit->Report("Date: " + FString(data->date));
+		ngspice->m_circuit->Report("Type: " + FString(data->type));
+		ngspice->m_circuit->Report("Veccount: " + FString::FromInt(data->veccount));
+		for (int i = 0; i < data->veccount; i++) {
+			ngspice->m_circuit->Report("VecInfo " + FString::FromInt(i) + ": Number: " + FString::FromInt(data->vecs[i]->number));
+			ngspice->m_circuit->Report("VecInfo " + FString::FromInt(i) + ": Vecname: " + FString(data->vecs[i]->vecname));
+			ngspice->m_circuit->Report("VecInfo " + FString::FromInt(i) + ": Is_real: " + FString(data->vecs[i]->is_real ? "true" : "false"));
 		}
-		circuit->Report("Id: " + FString::FromInt(id));
-		circuit->Report(" ");
-	}
+		ngspice->m_circuit->Report("Id: " + FString::FromInt(id));
+		ngspice->m_circuit->Report(" ");
+	}*/
 	return 0;
 }
 
 int NgSpice::cbBGThreadRunning(bool is_running, int id, void *user)
 {
-	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	for (ACircuit *circuit : ngspice->m_circuitArray) {
-		circuit->Report("IsRunning: " + FString(is_running ? "true" : "false") +
+	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	if (ngspice->m_circuit) {
+		ngspice->m_circuit->Report("IsRunning: " + FString(is_running ? "true" : "false") +
 			" Id: " + FString::FromInt(id));
-	}
+	}*/
     return 0;
 }

@@ -12,22 +12,6 @@ AComponent::AComponent()
 
 }
 
-// Getters and Setters
-/*double AComponent::GetCurrent()
-{
-	return m_current;
-}
-
-void AComponent::SetCurrent(double current)
-{
-	m_current = current;
-}*/
-
-TArray<ACircNode*> AComponent::GetCircNodeArray()
-{
-	return m_circNodeArray;
-}
-
 // Called when the game starts or when spawned
 void AComponent::BeginPlay()
 {
@@ -42,9 +26,21 @@ void AComponent::Tick(float DeltaTime)
 
 }
 
+// Gets nodes of this component
+TArray<ACircNode*> AComponent::GetCircNodeArray()
+{
+	return m_circNodeArray;
+}
+
+// Getter and setter for component identifier
 void AComponent::SetId(int32 id)
 {
 	m_id = GetPrefix() + FString::FromInt(id);
+}
+
+FString AComponent::GetId()
+{
+	return m_id;
 }
 
 FString AComponent::GetPrefix()
@@ -58,3 +54,23 @@ FString AComponent::GetCircLine()
 	check(0 && "You must override this");
 	return FString();
 }
+
+// Getters and setters for measurements
+double AComponent::GetCurrent(int index)
+{
+	if (index < m_currentArray.Num()) {
+		return m_currentArray[index];
+	}
+	return 0;
+}
+
+void AComponent::AddCurrent(double current)
+{
+	m_currentArray.Add(current);
+}
+
+void AComponent::ResetCurrentArray()
+{
+	m_currentArray.Empty();
+}
+
