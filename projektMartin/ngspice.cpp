@@ -150,7 +150,7 @@ int NgSpice::cbSendData(pvecvaluesall data, int num, int id, void *user)
 			&& data->vecsa[i]->creal >= ngspice->m_endTime) {
 			ngspice->m_bIsSimulating = false;
 			ngspice->m_circuit->Report("CbSendData: ends");
-			//ngspice->Command("destroy");
+			ngspice->Command("destroy");
 			//ngspice->Command("remcirc");
 		}
 	}

@@ -213,12 +213,12 @@ void ATester::PressedU()
 	t1_circuit->AddComponent(t1_resistor4);
 
 	t1_capacitor1 = GetWorld()->SpawnActor<ACapacitor>(ACapacitor::StaticClass());
-	t1_capacitor1->SetCapacitance(0.001);
+	t1_capacitor1->SetCapacitance(0.1);
 	t1_capacitor1->SetInitVoltage(1);
 	t1_circuit->AddComponent(t1_capacitor1);
 
 	t1_capacitor2 = GetWorld()->SpawnActor<ACapacitor>(ACapacitor::StaticClass());
-	t1_capacitor2->SetCapacitance(0.001);
+	t1_capacitor2->SetCapacitance(0.1);
 	t1_circuit->AddComponent(t1_capacitor2);
 
 	t1_transistor1 = GetWorld()->SpawnActor<ATransistor>(ATransistor::StaticClass());

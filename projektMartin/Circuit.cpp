@@ -82,7 +82,7 @@ bool ACircuit::Start(float time)
 	}
 
 	// Reset time and start simulation
-	if (ngspice.AddCircuit(this, time)) {
+	if (!ngspice.AddCircuit(this, time)) {
 		m_timeArray.Empty();
 		m_endTime = time;
 		m_realTime = 0;
