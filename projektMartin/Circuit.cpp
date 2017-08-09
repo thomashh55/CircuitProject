@@ -35,7 +35,7 @@ void ACircuit::Tick(float DeltaTime)
 	// Adds time
 	if (m_bIsRunning) {
 		m_realTime += DeltaTime;
-		while (m_realTimeIndex < m_timeArray.Num() - 1 && m_timeArray[m_realTimeIndex + 1] < m_realTime) {
+		while (m_realTimeIndex < m_timeArray.Num() - 1 && m_timeArray[m_realTimeIndex + 1] <= m_realTime) {
 			m_realTimeIndex++;
 			//UE_LOG(CircuitLog, Warning, TEXT("Circuit: Time: %f ArrayTime: %f index: %d"), m_realTime, m_timeArray[m_realTimeIndex], m_realTimeIndex);
 		}
@@ -154,40 +154,40 @@ void ACircuit::FillResults(pvecvaluesall data)
 
 // Measure functions for multimeter
 double ACircuit::MeasureCurrent(AWire *wire, float time) {
-	if (time >= m_endTime) {
-		return wire->GetCurrent(m_timeArray.Num() - 1);
-	}
-	if (m_timeArray.Num() == 1) {
-		return wire->GetCurrent(0);
+	if (m_timeArray.Num() == 0) {
+		return 0;
 	}
 	for (int i = 0; i < m_timeArray.Num() - 1; i++) {
-		if (m_timeArray[i + 1] >= time) {
+		if (m_timeArray[i + 1] > time) {
 			return wire->GetCurrent(i);
 		}
 	}
-	return 0;
+	return wire->GetCurrent(m_timeArray.Num() - 1);
 }
 
 double ACircuit::MeasureCurrent(AWire *wire) {
+	if (m_timeArray.Num() == 0) {
+		return 0;
+	}
 	return wire->GetCurrent(m_realTimeIndex);
 }
 
 double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time) {
-	if (time >= m_endTime) {
-		return circNode1->GetVoltage(m_timeArray.Num() - 1) - circNode2->GetVoltage(m_timeArray.Num() - 1);
-	}
-	if (m_timeArray.Num() == 1) {
-		return circNode1->GetVoltage(0) - circNode2->GetVoltage(0);
+	if (m_timeArray.Num() == 0) {
+		return 0;
 	}
 	for (int i = 0; i < m_timeArray.Num() - 1; i++) {
-		if (m_timeArray[i + 1] >= time) {
+		if (m_timeArray[i + 1] > time) {
 			return circNode1->GetVoltage(i) - circNode2->GetVoltage(i);
 		}
 	}
-	return 0;
+	return circNode1->GetVoltage(m_timeArray.Num() - 1) - circNode2->GetVoltage(m_timeArray.Num() - 1);
 }
 
 double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2) {
+	if (m_timeArray.Num() == 0) {
+		return 0;
+	}
 	return circNode1->GetVoltage(m_realTimeIndex) - circNode2->GetVoltage(m_realTimeIndex);
 }
 

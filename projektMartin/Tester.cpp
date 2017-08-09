@@ -291,6 +291,12 @@ void ATester::PressedO()
 void ATester::PressedP()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: P Pressed"));
+	char **plots = NgSpice::getInstance().GetAllPlots();
+	int i = 0;
+	while (plots[i] != NULL) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Plot %d: %s"), i, *FString(plots[i]));
+		i++;
+	}
 	//int8 iret = circuit->Command("bg_run");
 	//int8 iret = circuit->Command("bg_step");
 	//int8 iret = circuit->Command("bg_halt");
@@ -361,47 +367,6 @@ void ATester::PressedK()
 void ATester::PressedL()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: L Pressed"));
-	NgSpice::getInstance().Command("destroy");
-}
-
-void ATester::PressedC()
-{
-	UE_LOG(TesterLog, Warning, TEXT("Tester: C Pressed"));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation serial resistors"));
-	if (t0_circuit->Start(100)) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors started"));
-	}
-}
-
-void ATester::PressedV()
-{
-	UE_LOG(TesterLog, Warning, TEXT("Tester: V Pressed"));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation schema 1"));
-	if (t1_circuit->Start(100)) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 started"));
-	}
-}
-
-void ATester::PressedB()
-{
-	UE_LOG(TesterLog, Warning, TEXT("Tester: B Pressed"));
-}
-
-void ATester::PressedN()
-{
-	UE_LOG(TesterLog, Warning, TEXT("Tester: N Pressed"));
-
-	char **plots = NgSpice::getInstance().GetAllPlots();
-	int i = 0;
-	while (plots[i] != NULL) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Plot %d: %s"), i, *FString(plots[i]));
-		i++;
-	}
-}
-
-void ATester::PressedM()
-{
-	UE_LOG(TesterLog, Warning, TEXT("Tester: M Pressed"));
 	FString plotName(NgSpice::getInstance().GetPlotName());
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Plot name: %s"), *plotName);
 
@@ -411,4 +376,38 @@ void ATester::PressedM()
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Vec %d: %s"), i, *FString(vecs[i]));
 		i++;
 	}
+}
+
+void ATester::PressedC()
+{
+	UE_LOG(TesterLog, Warning, TEXT("Tester: C Pressed"));
+	NgSpice::getInstance().Command("destroy");
+}
+
+void ATester::PressedV()
+{
+	UE_LOG(TesterLog, Warning, TEXT("Tester: V Pressed"));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation serial resistors"));
+	if (t0_circuit->Start(100)) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors started"));
+	}
+}
+
+void ATester::PressedB()
+{
+	UE_LOG(TesterLog, Warning, TEXT("Tester: B Pressed"));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation schema 1"));
+	if (t1_circuit->Start(100)) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 started"));
+	}
+}
+
+void ATester::PressedN()
+{
+	UE_LOG(TesterLog, Warning, TEXT("Tester: N Pressed"));
+}
+
+void ATester::PressedM()
+{
+	UE_LOG(TesterLog, Warning, TEXT("Tester: M Pressed"));
 }
