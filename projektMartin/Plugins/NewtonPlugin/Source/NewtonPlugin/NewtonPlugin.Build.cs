@@ -53,7 +53,7 @@ namespace UnrealBuildTool.Rules
 				}
 				);
 			
-			PublicAdditionalLibraries.Add(Path.Combine(ModulePath, "sharedspice.lib"));
+			PublicAdditionalLibraries.Add(Path.Combine(ModulePath, "..", "..", "Binaries", "Win64", "sharedspice.lib"));
 			//PublicAdditionalLibraries.Add(Path.Combine(ModulePath, "..", "..", "ThirdParty", "Ngspice", "sharedspice.lib"));
 		}
 	}
