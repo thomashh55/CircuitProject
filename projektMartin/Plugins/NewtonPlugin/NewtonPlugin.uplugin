@@ -1,0 +1,21 @@
+{
+	"FileVersion" : 3,
+	"Version" : 1,
+	"VersionName" : "1.0",
+	"FriendlyName" : "Newton Plugin",
+	"Description" : "The Newton Plugin for SPICE circuit simulation.",
+	"Category" : "Spice",
+	"CreatedBy" : "Martin Gulis & Tomas Liscak",
+	"EnabledByDefault" : true,
+	"CanContainContent" : false,
+	"IsBetaVersion" : false,
+	"Installed" : false,
+	"Modules" :
+	[
+		{
+			"Name" : "NewtonPlugin",
+			"Type" : "Developer",
+			"LoadingPhase" : "Default"
+		}
+	]
+}
