@@ -56,22 +56,3 @@ FString AComponent::GetCircLine()
 	return FString();
 }
 
-// Getters and setters for measurements
-double AComponent::GetCurrent(int index)
-{
-	if (index < m_currentArray.Num()) {
-		return m_currentArray[index];
-	}
-	return 0;
-}
-
-void AComponent::AddCurrent(double current)
-{
-	m_currentArray.Add(current);
-}
-
-void AComponent::ResetCurrentArray()
-{
-	m_currentArray.Empty();
-}
-

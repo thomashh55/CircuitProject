@@ -6,22 +6,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Capacitor.generated.h"
+#include "Transistor.generated.h"
 
 UCLASS()
-class ACapacitor : public AComponent
+class NEWTONPLUGIN_API ATransistor : public AComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACapacitor();
-
-	// Getters and Setters
-	double GetCapacitance();
-	void SetCapacitance(double capacitance);
-	double GetInitVoltage();
-	void SetInitVoltage(double initVoltage);
+	ATransistor();
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,7 +33,5 @@ public:
 
 private:
 	static const FString m_prefix;
-	double m_capacitance;
-	double m_initVoltage;
 	
 };

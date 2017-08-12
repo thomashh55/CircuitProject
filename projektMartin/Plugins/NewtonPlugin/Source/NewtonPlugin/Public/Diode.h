@@ -6,20 +6,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Resistor.generated.h"
+#include "Diode.generated.h"
 
 UCLASS()
-class AResistor : public AComponent
+class NEWTONPLUGIN_API ADiode : public AComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AResistor();
-
-	// Getters and Setters
-	double GetResistance();
-	void SetResistance(double resistance);
+	ADiode();
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,6 +33,5 @@ public:
 
 private:
 	static const FString m_prefix;
-	double m_resistance;
-
+	
 };

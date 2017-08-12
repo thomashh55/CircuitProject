@@ -6,16 +6,22 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Wire.generated.h"
+#include "Capacitor.generated.h"
 
 UCLASS()
-class AWire : public AComponent
+class NEWTONPLUGIN_API ACapacitor : public AComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AWire();
+	ACapacitor();
+
+	// Getters and Setters
+	double GetCapacitance();
+	void SetCapacitance(double capacitance);
+	double GetInitVoltage();
+	void SetInitVoltage(double initVoltage);
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,9 +31,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Assigns nodes to the wire
-	virtual void AddCircNodes(ACircNode *circNode1, ACircNode *circNode2);
-
 	// Returns NgSpice prefix
 	virtual FString GetPrefix() override;
 
@@ -36,5 +39,7 @@ public:
 
 private:
 	static const FString m_prefix;
+	double m_capacitance;
+	double m_initVoltage;
 	
 };

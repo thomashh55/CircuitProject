@@ -6,16 +6,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Transistor.generated.h"
+#include "VoltageSource.generated.h"
 
 UCLASS()
-class ATransistor : public AComponent
+class NEWTONPLUGIN_API AVoltageSource : public AComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATransistor();
+	AVoltageSource();
+
+	// Getters and Setters
+	double GetDirectCurrent();
+	void SetDirectCurrent(double directCurrent);
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,5 +37,6 @@ public:
 
 private:
 	static const FString m_prefix;
+	double m_directCurrent;
 	
 };

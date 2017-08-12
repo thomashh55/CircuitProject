@@ -10,17 +10,11 @@ using namespace std;
 
 NgSpice::NgSpice()
 {
-	Init();
-	m_circuit = NULL;
 }
 
-NgSpice& NgSpice::getInstance()
+NgSpice &NgSpice::getInstance()
 {
 	static NgSpice instance;
-	if (instance.m_bIsFirst) {
-		instance.m_circuit = NULL;
-		instance.m_bIsFirst = false;
-	}
 	return instance;
 }
 
@@ -40,6 +34,7 @@ ACircuit *NgSpice::GetCircuit()
 
 int NgSpice::Init()
 {
+	m_circuit = NULL;
 	int ret = ngSpice_Init(&cbSendChar, &cbSendStat, &cbControlledExit, &cbSendData, &cbSendInitData, &cbBGThreadRunning, this);
 	return ret;
 }
@@ -119,13 +114,36 @@ int NgSpice::cbSendChar(char *data, int id, void *user)
 		ngspice->m_circuit->Report("CbSendChar: " + FString(data) +
 			" Id: " + FString::FromInt(id));
 	}*/
+
+	// Successful simulation
+	/*if (FString(data).Contains("stdout No. of Data Rows : ", ESearchCase::IgnoreCase)) {
+		if (ngspice->m_circuit) {
+			ngspice->m_circuit->Report("cbSendChar: Simulation completed");
+		}
+	}*/
+	// Unsuccessful simulation
+	if(FString(data).StartsWith("stderr", ESearchCase::IgnoreCase)) {
+		if (FString(data).Contains("stderr Warning: singular matrix:  check nodes ", ESearchCase::IgnoreCase)) {
+			if (ngspice->m_circuit) {
+				FString str(data);
+				str.RemoveFromStart("stderr Warning: singular matrix:  check nodes ");
+				ngspice->m_circuit->FillError(str.Left(str.Find(" ")));
+			}
+		}
+		/*if (FString(data).Contains("stderr run simulation(s) aborted", ESearchCase::IgnoreCase)) {
+			if (ngspice->m_circuit) {
+				ngspice->m_circuit->Report("cbSendChar: Simulation exited with error");
+			}
+		}*/
+	}
+
     return 0;
 }
 
 int NgSpice::cbSendStat(char *data, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	if (ngspice->m_circuit) {
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	/*if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("CbSendStat: " + FString(data) +
 			" Id: " + FString::FromInt(id));
 	}*/
@@ -134,8 +152,8 @@ int NgSpice::cbSendStat(char *data, int id, void *user)
 
 int NgSpice::cbControlledExit(int status, bool immediate, bool exit_upon_quit, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	if (ngspice->m_circuit) {
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	/*if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("Status: " + FString::FromInt(status) +
 			" Immediate: " + FString::FromInt(immediate) +
 			" Exit_upon_quit: " + FString::FromInt(exit_upon_quit) +
@@ -146,11 +164,11 @@ int NgSpice::cbControlledExit(int status, bool immediate, bool exit_upon_quit, i
 
 int NgSpice::cbSendData(pvecvaluesall data, int num, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
 
 	if (ngspice->m_circuit) {
 		ngspice->m_circuit->FillResults(data);
-	}*/
+	}
 
 	/*if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("CbSendData:");
@@ -172,8 +190,8 @@ int NgSpice::cbSendData(pvecvaluesall data, int num, int id, void *user)
 
 int NgSpice::cbSendInitData(pvecinfoall data, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	if (ngspice->m_circuit) {
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	/*if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("CbSendInitData:");
 		ngspice->m_circuit->Report("Name: " + FString(data->name));
 		ngspice->m_circuit->Report("Title: " + FString(data->title));
@@ -193,20 +211,18 @@ int NgSpice::cbSendInitData(pvecinfoall data, int id, void *user)
 
 int NgSpice::cbBGThreadRunning(bool is_running, int id, void *user)
 {
-	/*NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
-	
-	if (is_running) {
-		ngspice->m_bIsSimulating = false;
-		if (ngspice->m_circuit) {
-			ngspice->m_circuit->Report("CbSendData: ends");
-		}
-		//ngspice->Command("destroy");
-		//ngspice->Command("remcirc");
-	}
-
-	if (ngspice->m_circuit) {
+	NgSpice *ngspice = reinterpret_cast<NgSpice*>(user);
+	/*if (ngspice->m_circuit) {
 		ngspice->m_circuit->Report("IsRunning: " + FString(is_running ? "true" : "false") +
 			" Id: " + FString::FromInt(id));
 	}*/
+
+	// Simulation ends
+	if (is_running) {
+		ngspice->Command("destroy");
+		//ngspice->Command("remcirc");
+		ngspice->m_circuit = NULL;
+	}
+
     return 0;
 }

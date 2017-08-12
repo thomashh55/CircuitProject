@@ -12,11 +12,11 @@
 DECLARE_LOG_CATEGORY_EXTERN(TesterLog, Log, All);
 
 UCLASS()
-class ATester : public AActor
+class NEWTONPROJECT_API ATester : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	// Sets default values for this actor's properties
 	ATester();
 
@@ -24,7 +24,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -88,5 +88,15 @@ private:
 	AWire *t1_wire14;
 	AWire *t1_wire15;
 	AWire *t1_wire16;
+
+	// Wrong component test
+	ACircuit *t2_circuit;
+	AVoltageSource *t2_voltageSource1;
+	AResistor *t2_resistor1;
+	AResistor *t2_resistor2;
+	AWire *t2_wire1;
+	AWire *t2_wire2;
+	AWire *t2_wire3;
+	AWire *t2_wire4;
 
 };

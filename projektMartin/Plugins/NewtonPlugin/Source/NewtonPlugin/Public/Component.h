@@ -2,41 +2,42 @@
 
 #pragma once
 
-#include "Component.h"
+#include "CircNode.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "VoltageSource.generated.h"
+#include "Component.generated.h"
 
-UCLASS()
-class AVoltageSource : public AComponent
+UCLASS(abstract)
+class NEWTONPLUGIN_API AComponent : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AVoltageSource();
-
-	// Getters and Setters
-	double GetDirectCurrent();
-	void SetDirectCurrent(double directCurrent);
+	AComponent();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Returns NgSpice prefix
-	virtual FString GetPrefix() override;
+	// Gets nodes of this component
+	TArray<ACircNode*> GetCircNodeArray();
+
+	// Getter and setter for component identifier
+	void SetId(int32 id);
+	FString GetId();
+	virtual FString GetPrefix();
 
 	// Returns line for NgSpice
-	virtual FString GetCircLine() override;
+	virtual FString GetCircLine();
 
-private:
-	static const FString m_prefix;
-	double m_directCurrent;
+protected:
+	FString m_id;
+	TArray<ACircNode*> m_circNodeArray;
 	
 };

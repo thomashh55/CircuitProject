@@ -2,18 +2,24 @@
 
 #pragma once
 
+#include "Component.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CircNode.generated.h"
+#include "Resistor.generated.h"
 
 UCLASS()
-class ACircNode : public AActor
+class NEWTONPLUGIN_API AResistor : public AComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACircNode();
+	AResistor();
+
+	// Getters and Setters
+	double GetResistance();
+	void SetResistance(double resistance);
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,17 +29,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Getter and setter for component identifier
-	int32 GetId();
-	void SetId(int32 id);
+	// Returns NgSpice prefix
+	virtual FString GetPrefix() override;
 
-	// Getters and setters for measurements
-	double GetVoltage(int index);
-	void AddVoltage(double voltage);
-	void ResetVoltageArray();
+	// Returns line for NgSpice
+	virtual FString GetCircLine() override;
 
 private:
-	int32 m_id;
-	TArray<double> m_voltageArray;
-	
+	static const FString m_prefix;
+	double m_resistance;
+
 };

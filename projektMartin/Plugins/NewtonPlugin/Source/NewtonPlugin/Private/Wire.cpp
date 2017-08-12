@@ -37,6 +37,23 @@ void AWire::AddCircNodes(ACircNode *circNode1, ACircNode *circNode2)
 	m_circNodeArray.Add(circNode2);
 }
 
+// Gets nodes of this component
+TArray<ACircNode*> AWire::GetCircNodeArray()
+{
+	return m_circNodeArray;
+}
+
+// Getter and setter for component identifier
+void AWire::SetId(int32 id)
+{
+	m_id = GetPrefix() + FString::FromInt(id);
+}
+
+FString AWire::GetId()
+{
+	return m_id;
+}
+
 // Returns NgSpice prefix
 FString AWire::GetPrefix()
 {
@@ -54,3 +71,21 @@ FString AWire::GetCircLine()
 	return FString();
 }
 
+// Getters and setters for measurements
+double AWire::GetCurrent(int index)
+{
+	if (index < m_currentArray.Num()) {
+		return m_currentArray[index];
+	}
+	return 0;
+}
+
+void AWire::AddCurrent(double current)
+{
+	m_currentArray.Add(current);
+}
+
+void AWire::ResetCurrentArray()
+{
+	m_currentArray.Empty();
+}

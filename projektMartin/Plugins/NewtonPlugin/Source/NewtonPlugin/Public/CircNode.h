@@ -2,20 +2,18 @@
 
 #pragma once
 
-#include "Component.h"
-
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Diode.generated.h"
+#include "CircNode.generated.h"
 
 UCLASS()
-class ADiode : public AComponent
+class NEWTONPLUGIN_API ACircNode : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ADiode();
+	ACircNode();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,13 +23,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Returns NgSpice prefix
-	virtual FString GetPrefix() override;
+	// Getter and setter for component identifier
+	int32 GetId();
+	void SetId(int32 id);
 
-	// Returns line for NgSpice
-	virtual FString GetCircLine() override;
+	// Getters and setters for measurements
+	double GetVoltage(int index);
+	void AddVoltage(double voltage);
+	void ResetVoltageArray();
 
 private:
-	static const FString m_prefix;
+	int32 m_id;
+	TArray<double> m_voltageArray;
 	
 };

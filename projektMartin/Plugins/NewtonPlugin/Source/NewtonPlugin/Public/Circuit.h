@@ -21,7 +21,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(CircuitLog, Log, All);
 
 UCLASS()
-class ACircuit : public AActor
+class NEWTONPLUGIN_API ACircuit : public AActor
 {
 	GENERATED_BODY()
 	
@@ -39,13 +39,18 @@ public:
 
 	// Create circuit
 	virtual void AddComponent(AComponent *component);
+	virtual void RemoveComponent(AComponent *component);
 	virtual void AddWire(AWire *wire, ACircNode *circNode1, ACircNode *circNode2);
+	virtual void RemoveWire(AWire *wire);
 
-	// Get array of components
+	// Get array of components and wires
 	virtual TArray<AComponent*> GetComponentArray();
+	virtual TArray<AWire*> GetWireArray();
 	
 	// Simulation commands
-	virtual bool Start(float time);
+	virtual bool Start(float endTime);
+	virtual bool Stop();
+	virtual bool Resume();
 	virtual float GetRealTime();
 	virtual float GetSimulationTime();
 
@@ -58,11 +63,17 @@ public:
 	virtual double MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time);
 	virtual double MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2);
 
+	// Finds error in circuit
+	virtual void FillError(FString error);
+	virtual ACircNode *GetErrorCircNode();
+	virtual AWire *GetErrorWire();
+
 	// Debug purpose
 	virtual void Report(const FString& report);
 
 private:
 	TArray<AComponent*> m_componentArray;
+	TArray<AWire*> m_wireArray;
 	TArray<ACircNode*> m_circNodeArray;
 
 	TArray<double> m_timeArray;
@@ -70,5 +81,8 @@ private:
 	float m_realTime;
 	int m_realTimeIndex;
 	bool m_bIsRunning;
+
+	ACircNode *m_errorCircNode;
+	AWire *m_errorWire;
 	
 };

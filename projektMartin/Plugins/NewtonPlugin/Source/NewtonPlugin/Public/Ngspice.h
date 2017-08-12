@@ -8,7 +8,7 @@
 
 class ACircuit;
 
-class NgSpice {
+class NEWTONPLUGIN_API NgSpice {
 
 public:
 	// Returns singleton instance
@@ -43,6 +43,5 @@ private:
     static int cbBGThreadRunning(bool is_running, int id, void *user);
 
 	ACircuit *m_circuit;
-	bool m_bIsFirst = true;
 
 };

@@ -40,8 +40,6 @@ namespace UnrealBuildTool.Rules
 			PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{
-					"Slate", 
-					"SlateCore"
 					// ... add private dependencies that you statically link with here ...
 				}
 				);

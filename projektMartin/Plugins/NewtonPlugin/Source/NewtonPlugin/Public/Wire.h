@@ -6,24 +6,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Component.generated.h"
+#include "Wire.generated.h"
 
-UCLASS(abstract)
-class AComponent : public AActor
+UCLASS()
+class NEWTONPLUGIN_API AWire : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AComponent();
+	AWire();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
+public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// Assigns nodes to the wire
+	virtual void AddCircNodes(ACircNode *circNode1, ACircNode *circNode2);
 
 	// Gets nodes of this component
 	TArray<ACircNode*> GetCircNodeArray();
@@ -41,9 +44,10 @@ public:
 	void AddCurrent(double current);
 	void ResetCurrentArray();
 
-protected:
+private:
+	static const FString m_prefix;
 	FString m_id;
-	TArray<double> m_currentArray;
 	TArray<ACircNode*> m_circNodeArray;
+	TArray<double> m_currentArray;
 	
 };

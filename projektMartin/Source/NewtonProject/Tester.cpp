@@ -1,7 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "CoreMinimal.h"
-
 #include "Tester.h"
 
 
@@ -11,7 +9,7 @@ DEFINE_LOG_CATEGORY(TesterLog);
 // Sets default values
 ATester::ATester()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 }
@@ -42,6 +40,10 @@ void ATester::BeginPlay()
 	InputComponent->BindKey(EKeys::N, IE_Released, this, &ATester::PressedN);
 	InputComponent->BindKey(EKeys::M, IE_Released, this, &ATester::PressedM);
 
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Controls initialized"));
+
+	NgSpice::getInstance().Init();
+
 	// Assign reporter
 	/*reporter = GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass());
 	ngspice->SetReporter(reporter);
@@ -58,7 +60,7 @@ void ATester::BeginPlay()
 
 	// Prepare circuit
 	//UE_LOG(TesterLog, Warning, TEXT("Tester: Executing commands"));
-	
+
 	// Serial resistors
 	/*iret = ngspice->Command("circbyline fail test");
 	iret = ngspice->Command("circbyline V1 0 1 9");
@@ -283,17 +285,63 @@ void ATester::PressedU()
 void ATester::PressedI()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: I Pressed"));
+
+	// Wrong component
+
+	// Create circuit
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating circuit"));
+	t2_circuit = GetWorld()->SpawnActor<ACircuit>(ACircuit::StaticClass());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Circuit created"));
+
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Creating nodes and components for wrong component test"));
+
+	t2_voltageSource1 = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
+	t2_voltageSource1->SetDirectCurrent(9);
+	t2_circuit->AddComponent(t2_voltageSource1);
+
+	t2_resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	t2_resistor1->SetResistance(3);
+	t2_circuit->AddComponent(t2_resistor1);
+
+	t2_resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
+	t2_resistor2->SetResistance(3);
+	t2_circuit->AddComponent(t2_resistor2);
+
+	t2_wire1 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	t2_circuit->AddWire(t2_wire1, t2_voltageSource1->GetCircNodeArray()[1], t2_resistor1->GetCircNodeArray()[0]);
+
+	t2_wire2 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	t2_circuit->AddWire(t2_wire2, t2_resistor1->GetCircNodeArray()[1], t2_resistor2->GetCircNodeArray()[0]);
+
+	t2_wire3 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	t2_circuit->AddWire(t2_wire3, t2_resistor2->GetCircNodeArray()[1], t2_voltageSource1->GetCircNodeArray()[0]);
+
+	t2_wire4 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	t2_circuit->AddWire(t2_wire4, t2_resistor2->GetCircNodeArray()[1], t2_voltageSource1->GetCircNodeArray()[0]);
+
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Nodes and components created"));
 }
 
 void ATester::PressedO()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: O Pressed"));
-	ACircuit *circuit = NgSpice::getInstance().GetCircuit();
-	if (circuit) {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Circuit NIE je NULL"));
+	if (t0_circuit && t0_circuit->Stop()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors stopped"));
 	}
 	else {
-		UE_LOG(TesterLog, Warning, TEXT("Tester: Circuit je NULL"));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors could not stop"));
+	}
+	if (t1_circuit && t1_circuit->Stop()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 stopped"));
+	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 could not stop"));
+	}
+	if (t2_circuit && t2_circuit->Stop()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component stopped"));
+	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component could not stop"));
 	}
 }
 
@@ -325,7 +373,7 @@ void ATester::PressedG()
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire1->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current at time = 5: %f"), t0_circuit->MeasureCurrent(t0_wire1, 5));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage at time = 5: %f"), t0_circuit->MeasureVoltage(t0_wire1->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0], 5));
-	
+
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current: %f"), t0_circuit->MeasureCurrent(t0_wire2));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire2->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current at time = 5: %f"), t0_circuit->MeasureCurrent(t0_wire2, 5));
@@ -340,7 +388,7 @@ void ATester::PressedG()
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire4->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current at time = 5: %f"), t0_circuit->MeasureCurrent(t0_wire4, 5));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage at time = 5: %f"), t0_circuit->MeasureVoltage(t0_wire4->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0], 5));
-
+	
 }
 
 void ATester::PressedH()
@@ -365,12 +413,45 @@ void ATester::PressedH()
 void ATester::PressedJ()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: J Pressed"));
+
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t2_circuit->GetRealTime());
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t2_circuit->GetSimulationTime());
+
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current: %f"), t2_circuit->MeasureCurrent(t2_wire1));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire1->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
+	
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current: %f"), t2_circuit->MeasureCurrent(t2_wire2));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire2->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
+	
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current: %f"), t2_circuit->MeasureCurrent(t2_wire3));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire3->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
+	
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current: %f"), t2_circuit->MeasureCurrent(t2_wire4));
+	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire4->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
+	
 }
 
 void ATester::PressedK()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: K Pressed"));
-	//NgSpice::getInstance().Command("remcirc");
+	if (t0_circuit && t0_circuit->Resume()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors resumed"));
+	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors could not resume"));
+	}
+	if (t1_circuit && t1_circuit->Resume()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 resumed"));
+	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 could not resume"));
+	}
+	if (t2_circuit && t2_circuit->Resume()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component resumed"));
+	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component could not resume"));
+	}
 }
 
 void ATester::PressedL()
@@ -390,8 +471,6 @@ void ATester::PressedL()
 void ATester::PressedC()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: C Pressed"));
-	NgSpice::getInstance().Command("bg_halt");
-	NgSpice::getInstance().Command("destroy");
 }
 
 void ATester::PressedV()
@@ -400,6 +479,9 @@ void ATester::PressedV()
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation serial resistors"));
 	if (t0_circuit->Start(100)) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors started"));
+	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors could not start, another simulation in progress"));
 	}
 }
 
@@ -410,14 +492,71 @@ void ATester::PressedB()
 	if (t1_circuit->Start(100)) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 started"));
 	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 could not start, another simulation in progress"));
+	}
 }
 
 void ATester::PressedN()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: N Pressed"));
+	if (t2_circuit->Start(100)) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component started"));
+	}
+	else {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component could not start, another simulation in progress"));
+	}
 }
 
 void ATester::PressedM()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: M Pressed"));
+	if (t0_circuit) {
+		ACircNode *errorCircNode = t0_circuit->GetErrorCircNode();
+		if (errorCircNode) {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors error node: %d"), errorCircNode->GetId());
+		}
+		else {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors no error node"));
+		}
+		AWire *errorWire = t0_circuit->GetErrorWire();
+		if (errorWire) {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors error wire: %s"), *errorWire->GetId());
+		}
+		else {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors no error wire"));
+		}
+	}
+	if (t1_circuit) {
+		ACircNode *errorCircNode = t1_circuit->GetErrorCircNode();
+		if (errorCircNode) {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 error node: %d"), errorCircNode->GetId());
+		}
+		else {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 no error node"));
+		}
+		AWire *errorWire = t1_circuit->GetErrorWire();
+		if (errorWire) {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 error wire: %s"), *errorWire->GetId());
+		}
+		else {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 no error wire"));
+		}
+	}
+	if (t2_circuit) {
+		ACircNode *errorCircNode = t2_circuit->GetErrorCircNode();
+		if (errorCircNode) {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component error node: %d"), errorCircNode->GetId());
+		}
+		else {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component no error node"));
+		}
+		AWire *errorWire = t2_circuit->GetErrorWire();
+		if (errorWire) {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component error wire: %s"), *errorWire->GetId());
+		}
+		else {
+			UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component no error wire"));
+		}
+	}
 }
