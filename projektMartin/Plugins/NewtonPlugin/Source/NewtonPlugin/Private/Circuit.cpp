@@ -177,15 +177,20 @@ bool ACircuit::Start(float endTime)
 
 bool ACircuit::Stop()
 {
-	NgSpice &ngspice = NgSpice::getInstance();
 	m_bIsRunning = false;
 	return true;
 }
 
 bool ACircuit::Resume()
 {
-	NgSpice &ngspice = NgSpice::getInstance();
 	m_bIsRunning = true;
+	return true;
+}
+
+bool ACircuit::ForceStop()
+{
+	NgSpice &ngspice = NgSpice::getInstance();
+	ngspice.Command("bg_halt");
 	return true;
 }
 

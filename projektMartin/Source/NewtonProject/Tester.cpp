@@ -471,6 +471,15 @@ void ATester::PressedL()
 void ATester::PressedC()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: C Pressed"));
+	if (t0_circuit && t0_circuit->ForceStop()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors forced to stop"));
+	}
+	if (t1_circuit && t1_circuit->ForceStop()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 forced to stop"));
+	}
+	if (t2_circuit && t2_circuit->ForceStop()) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component forced to stop"));
+	}
 }
 
 void ATester::PressedV()

@@ -51,6 +51,7 @@ public:
 	virtual bool Start(float endTime);
 	virtual bool Stop();
 	virtual bool Resume();
+	virtual bool ForceStop();
 	virtual float GetRealTime();
 	virtual float GetSimulationTime();
 
