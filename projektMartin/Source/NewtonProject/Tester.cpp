@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Martin Gulis & Tomas Liscak
 
 #include "Tester.h"
 
