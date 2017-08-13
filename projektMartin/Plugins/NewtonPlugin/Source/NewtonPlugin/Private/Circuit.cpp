@@ -154,9 +154,11 @@ bool ACircuit::Start(float endTime)
 			circNode->SetId(m_circNodeCounter++);
 		}
 		for (AComponent *component : m_componentArray) {
-			component->SetId(m_componentCounter++);
-			//UE_LOG(CircuitLog, Warning, TEXT("Circuit: %s"), *component->GetCircLine());
-			ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
+			if (!component->IsA(ANodeComponent::StaticClass())) {
+				component->SetId(m_componentCounter++);
+				//UE_LOG(CircuitLog, Warning, TEXT("Circuit: %s"), *component->GetCircLine());
+				ngspice.Command(TCHAR_TO_ANSI(*(FString("circbyline ") + component->GetCircLine())));
+			}
 		}
 		for (AWire *wire : m_wireArray) {
 			wire->ResetCurrentArray();

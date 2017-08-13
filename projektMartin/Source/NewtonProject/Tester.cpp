@@ -307,17 +307,23 @@ void ATester::PressedI()
 	t2_resistor2->SetResistance(3);
 	t2_circuit->AddComponent(t2_resistor2);
 
+	t2_nodeComponent1 = GetWorld()->SpawnActor<ANodeComponent>(ANodeComponent::StaticClass());
+	t2_circuit->AddComponent(t2_nodeComponent1);
+
 	t2_wire1 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
-	t2_circuit->AddWire(t2_wire1, t2_voltageSource1->GetCircNodeArray()[1], t2_resistor1->GetCircNodeArray()[0]);
+	t2_circuit->AddWire(t2_wire1, t2_voltageSource1->GetCircNodeArray()[1], t2_nodeComponent1->GetCircNodeArray()[0]);
 
 	t2_wire2 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
-	t2_circuit->AddWire(t2_wire2, t2_resistor1->GetCircNodeArray()[1], t2_resistor2->GetCircNodeArray()[0]);
+	t2_circuit->AddWire(t2_wire2, t2_nodeComponent1->GetCircNodeArray()[0], t2_resistor1->GetCircNodeArray()[0]);
 
 	t2_wire3 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
-	t2_circuit->AddWire(t2_wire3, t2_resistor2->GetCircNodeArray()[1], t2_voltageSource1->GetCircNodeArray()[0]);
+	t2_circuit->AddWire(t2_wire3, t2_nodeComponent1->GetCircNodeArray()[0], t2_resistor2->GetCircNodeArray()[0]);
 
 	t2_wire4 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
-	t2_circuit->AddWire(t2_wire4, t2_resistor2->GetCircNodeArray()[1], t2_voltageSource1->GetCircNodeArray()[0]);
+	t2_circuit->AddWire(t2_wire4, t2_resistor1->GetCircNodeArray()[1], t2_voltageSource1->GetCircNodeArray()[0]);
+
+	t2_wire5 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
+	t2_circuit->AddWire(t2_wire5, t2_resistor2->GetCircNodeArray()[1], t2_voltageSource1->GetCircNodeArray()[0]);
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Nodes and components created"));
 }

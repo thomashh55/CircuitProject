@@ -5,13 +5,14 @@
 #include "Ngspice.h"
 #include "CircNode.h"
 #include "Component.h"
+#include "Wire.h"
 
 #include "Capacitor.h"
 #include "Diode.h"
+#include "NodeComponent.h"
 #include "Resistor.h"
 #include "Transistor.h"
 #include "VoltageSource.h"
-#include "Wire.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"

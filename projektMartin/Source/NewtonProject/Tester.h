@@ -94,9 +94,11 @@ private:
 	AVoltageSource *t2_voltageSource1;
 	AResistor *t2_resistor1;
 	AResistor *t2_resistor2;
+	ANodeComponent *t2_nodeComponent1;
 	AWire *t2_wire1;
 	AWire *t2_wire2;
 	AWire *t2_wire3;
 	AWire *t2_wire4;
+	AWire *t2_wire5;
 
 };
