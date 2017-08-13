@@ -8,7 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "Tester.generated.h"
 
-//Tester Log
+// Tester Log
 DECLARE_LOG_CATEGORY_EXTERN(TesterLog, Log, All);
 
 UCLASS()

@@ -18,7 +18,7 @@
 #include "GameFramework/Actor.h"
 #include "Circuit.generated.h"
 
-//Circuit Log
+// Circuit Log
 DECLARE_LOG_CATEGORY_EXTERN(CircuitLog, Log, All);
 
 UCLASS()

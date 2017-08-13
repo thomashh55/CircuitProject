@@ -5,7 +5,7 @@
 #include "Circuit.h"
 
 
-//Circuit Log
+// Circuit Log
 DEFINE_LOG_CATEGORY(CircuitLog);
 
 // Sets default values

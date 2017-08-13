@@ -6,8 +6,6 @@
 #include "Circuit.h"
 
 
-using namespace std;
-
 NgSpice::NgSpice()
 {
 }

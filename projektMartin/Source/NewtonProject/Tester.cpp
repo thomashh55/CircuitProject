@@ -3,7 +3,7 @@
 #include "Tester.h"
 
 
-//Tester Log
+// Tester Log
 DEFINE_LOG_CATEGORY(TesterLog);
 
 // Sets default values

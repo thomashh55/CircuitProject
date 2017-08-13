@@ -1,4 +1,4 @@
-//
+// Martin Gulis & Tomas Liscak
 
 #include "CoreMinimal.h"
 
