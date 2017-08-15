@@ -18,8 +18,11 @@ public:
 	AResistor();
 
 	// Getters and Setters
-	double GetResistance();
-	void SetResistance(double resistance);
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	float GetResistance();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	void SetResistance(float resistance);
 
 protected:
 	// Called when the game starts or when spawned

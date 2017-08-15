@@ -29,6 +29,7 @@ public:
 	virtual void AddCircNodes(ACircNode *circNode1, ACircNode *circNode2);
 
 	// Gets nodes of this component
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	TArray<ACircNode*> GetCircNodeArray();
 
 	// Getter and setter for component identifier

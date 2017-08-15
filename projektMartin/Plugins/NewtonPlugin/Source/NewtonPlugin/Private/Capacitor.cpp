@@ -18,22 +18,22 @@ ACapacitor::ACapacitor()
 }
 
 // Getters and Setters
-double ACapacitor::GetCapacitance()
+float ACapacitor::GetCapacitance()
 {
 	return m_capacitance;
 }
 
-void ACapacitor::SetCapacitance(double capacitance)
+void ACapacitor::SetCapacitance(float capacitance)
 {
 	m_capacitance = capacitance;
 }
 
-double ACapacitor::GetInitVoltage()
+float ACapacitor::GetInitVoltage()
 {
 	return m_initVoltage;
 }
 
-void ACapacitor::SetInitVoltage(double initVoltage)
+void ACapacitor::SetInitVoltage(float initVoltage)
 {
 	m_initVoltage = initVoltage;
 }

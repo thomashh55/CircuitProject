@@ -18,8 +18,11 @@ public:
 	AVoltageSource();
 
 	// Getters and Setters
-	double GetDirectCurrent();
-	void SetDirectCurrent(double directCurrent);
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	float GetDirectCurrent();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	void SetDirectCurrent(float directCurrent);
 
 protected:
 	// Called when the game starts or when spawned

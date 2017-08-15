@@ -17,12 +17,12 @@ AVoltageSource::AVoltageSource()
 }
 
 // Getters and Setters
-double AVoltageSource::GetDirectCurrent()
+float AVoltageSource::GetDirectCurrent()
 {
 	return m_directCurrent;
 }
 
-void AVoltageSource::SetDirectCurrent(double directCurrent)
+void AVoltageSource::SetDirectCurrent(float directCurrent)
 {
 	m_directCurrent = directCurrent;
 }

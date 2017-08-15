@@ -18,10 +18,17 @@ public:
 	ACapacitor();
 
 	// Getters and Setters
-	double GetCapacitance();
-	void SetCapacitance(double capacitance);
-	double GetInitVoltage();
-	void SetInitVoltage(double initVoltage);
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	float GetCapacitance();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	void SetCapacitance(float capacitance);
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	float GetInitVoltage();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	void SetInitVoltage(float initVoltage);
 
 protected:
 	// Called when the game starts or when spawned

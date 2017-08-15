@@ -42,7 +42,7 @@ void ATester::BeginPlay()
 
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Controls initialized"));
 
-	NgSpice::getInstance().Init();
+	ACircuit::Init();
 
 	// Assign reporter
 	/*reporter = GetWorld()->SpawnActor<AReporter>(AReporter::StaticClass());
@@ -148,19 +148,19 @@ void ATester::PressedY()
 
 	t0_voltageSource1 = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
 	t0_voltageSource1->SetDirectCurrent(9);
-	t0_circuit->AddComponent(t0_voltageSource1);
+	t0_circuit->AddComp(t0_voltageSource1);
 
 	t0_resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t0_resistor1->SetResistance(3);
-	t0_circuit->AddComponent(t0_resistor1);
+	t0_circuit->AddComp(t0_resistor1);
 
 	t0_resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t0_resistor2->SetResistance(10);
-	t0_circuit->AddComponent(t0_resistor2);
+	t0_circuit->AddComp(t0_resistor2);
 
 	t0_resistor3 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t0_resistor3->SetResistance(5);
-	t0_circuit->AddComponent(t0_resistor3);
+	t0_circuit->AddComp(t0_resistor3);
 
 	t0_wire1 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
 	t0_circuit->AddWire(t0_wire1, t0_voltageSource1->GetCircNodeArray()[1], t0_resistor1->GetCircNodeArray()[0]);
@@ -192,44 +192,44 @@ void ATester::PressedU()
 
 	t1_voltageSource1 = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
 	t1_voltageSource1->SetDirectCurrent(3.7);
-	t1_circuit->AddComponent(t1_voltageSource1);
+	t1_circuit->AddComp(t1_voltageSource1);
 
 	t1_diode1 = GetWorld()->SpawnActor<ADiode>(ADiode::StaticClass());
-	t1_circuit->AddComponent(t1_diode1);
+	t1_circuit->AddComp(t1_diode1);
 
 	t1_diode2 = GetWorld()->SpawnActor<ADiode>(ADiode::StaticClass());
-	t1_circuit->AddComponent(t1_diode2);
+	t1_circuit->AddComp(t1_diode2);
 
 	t1_resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t1_resistor1->SetResistance(1000);
-	t1_circuit->AddComponent(t1_resistor1);
+	t1_circuit->AddComp(t1_resistor1);
 
 	t1_resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t1_resistor2->SetResistance(5000);
-	t1_circuit->AddComponent(t1_resistor2);
+	t1_circuit->AddComp(t1_resistor2);
 
 	t1_resistor3 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t1_resistor3->SetResistance(5000);
-	t1_circuit->AddComponent(t1_resistor3);
+	t1_circuit->AddComp(t1_resistor3);
 
 	t1_resistor4 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t1_resistor4->SetResistance(1000);
-	t1_circuit->AddComponent(t1_resistor4);
+	t1_circuit->AddComp(t1_resistor4);
 
 	t1_capacitor1 = GetWorld()->SpawnActor<ACapacitor>(ACapacitor::StaticClass());
 	t1_capacitor1->SetCapacitance(0.0022);
 	t1_capacitor1->SetInitVoltage(0.0022);
-	t1_circuit->AddComponent(t1_capacitor1);
+	t1_circuit->AddComp(t1_capacitor1);
 
 	t1_capacitor2 = GetWorld()->SpawnActor<ACapacitor>(ACapacitor::StaticClass());
 	t1_capacitor2->SetCapacitance(0.0022);
-	t1_circuit->AddComponent(t1_capacitor2);
+	t1_circuit->AddComp(t1_capacitor2);
 
 	t1_transistor1 = GetWorld()->SpawnActor<ATransistor>(ATransistor::StaticClass());
-	t1_circuit->AddComponent(t1_transistor1);
+	t1_circuit->AddComp(t1_transistor1);
 
 	t1_transistor2 = GetWorld()->SpawnActor<ATransistor>(ATransistor::StaticClass());
-	t1_circuit->AddComponent(t1_transistor2);
+	t1_circuit->AddComp(t1_transistor2);
 
 	t1_wire1 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
 	t1_circuit->AddWire(t1_wire1, t1_voltageSource1->GetCircNodeArray()[0], t1_diode1->GetCircNodeArray()[0]);
@@ -297,18 +297,18 @@ void ATester::PressedI()
 
 	t2_voltageSource1 = GetWorld()->SpawnActor<AVoltageSource>(AVoltageSource::StaticClass());
 	t2_voltageSource1->SetDirectCurrent(9);
-	t2_circuit->AddComponent(t2_voltageSource1);
+	t2_circuit->AddComp(t2_voltageSource1);
 
 	t2_resistor1 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t2_resistor1->SetResistance(3);
-	t2_circuit->AddComponent(t2_resistor1);
+	t2_circuit->AddComp(t2_resistor1);
 
 	t2_resistor2 = GetWorld()->SpawnActor<AResistor>(AResistor::StaticClass());
 	t2_resistor2->SetResistance(3);
-	t2_circuit->AddComponent(t2_resistor2);
+	t2_circuit->AddComp(t2_resistor2);
 
 	t2_nodeComponent1 = GetWorld()->SpawnActor<ANodeComponent>(ANodeComponent::StaticClass());
-	t2_circuit->AddComponent(t2_nodeComponent1);
+	t2_circuit->AddComp(t2_nodeComponent1);
 
 	t2_wire1 = GetWorld()->SpawnActor<AWire>(AWire::StaticClass());
 	t2_circuit->AddWire(t2_wire1, t2_voltageSource1->GetCircNodeArray()[1], t2_nodeComponent1->GetCircNodeArray()[0]);
@@ -371,70 +371,62 @@ void ATester::PressedP()
 void ATester::PressedG()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: G Pressed"));
+	if (t0_circuit) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t0_circuit->GetRealTime());
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t0_circuit->GetSimulationTime());
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t0_circuit->GetRealTime());
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t0_circuit->GetSimulationTime());
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current: %f"), t0_circuit->MeasureCurrent(t0_wire1));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire1->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current: %f"), t0_circuit->MeasureCurrent(t0_wire1));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire1->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current at time = 5: %f"), t0_circuit->MeasureCurrent(t0_wire1, 5));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage at time = 5: %f"), t0_circuit->MeasureVoltage(t0_wire1->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0], 5));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current: %f"), t0_circuit->MeasureCurrent(t0_wire2));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire2->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current: %f"), t0_circuit->MeasureCurrent(t0_wire2));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire2->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current at time = 5: %f"), t0_circuit->MeasureCurrent(t0_wire2, 5));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage at time = 5: %f"), t0_circuit->MeasureVoltage(t0_wire2->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0], 5));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current: %f"), t0_circuit->MeasureCurrent(t0_wire3));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire3->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current: %f"), t0_circuit->MeasureCurrent(t0_wire3));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire3->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current at time = 5: %f"), t0_circuit->MeasureCurrent(t0_wire3, 5));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage at time = 5: %f"), t0_circuit->MeasureVoltage(t0_wire3->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0], 5));
-
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current: %f"), t0_circuit->MeasureCurrent(t0_wire4));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire4->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current at time = 5: %f"), t0_circuit->MeasureCurrent(t0_wire4, 5));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage at time = 5: %f"), t0_circuit->MeasureVoltage(t0_wire4->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0], 5));
-	
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current: %f"), t0_circuit->MeasureCurrent(t0_wire4));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage: %f"), t0_circuit->MeasureVoltage(t0_wire4->GetCircNodeArray()[0], t0_wire1->GetCircNodeArray()[0]));
+	}
 }
 
 void ATester::PressedH()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: H Pressed"));
+	if (t1_circuit) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t1_circuit->GetRealTime());
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t1_circuit->GetSimulationTime());
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t1_circuit->GetRealTime());
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t1_circuit->GetSimulationTime());
+		UE_LOG(TesterLog, Warning, TEXT("Tester: MB1 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor1->GetCircNodeArray()[1], t1_voltageSource1->GetCircNodeArray()[1]));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: MB2 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor2->GetCircNodeArray()[1], t1_voltageSource1->GetCircNodeArray()[1]));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: MB3 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor1->GetCircNodeArray()[0], t1_voltageSource1->GetCircNodeArray()[1]));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: MB4 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor2->GetCircNodeArray()[0], t1_voltageSource1->GetCircNodeArray()[1]));
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: MB1 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor1->GetCircNodeArray()[1], t1_voltageSource1->GetCircNodeArray()[1]));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: MB2 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor2->GetCircNodeArray()[1], t1_voltageSource1->GetCircNodeArray()[1]));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: MB3 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor1->GetCircNodeArray()[0], t1_voltageSource1->GetCircNodeArray()[1]));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: MB4 voltage: %f"), t1_circuit->MeasureVoltage(t1_transistor2->GetCircNodeArray()[0], t1_voltageSource1->GetCircNodeArray()[1]));
-
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Ce1 current: %f"), t1_circuit->MeasureCurrent(t1_wire15));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Ce2 current: %f"), t1_circuit->MeasureCurrent(t1_wire16));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: B1 current: %f"), t1_circuit->MeasureCurrent(t1_wire11));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: B2 current: %f"), t1_circuit->MeasureCurrent(t1_wire10));
-	
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Ce1 current: %f"), t1_circuit->MeasureCurrent(t1_wire15));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Ce2 current: %f"), t1_circuit->MeasureCurrent(t1_wire16));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: B1 current: %f"), t1_circuit->MeasureCurrent(t1_wire11));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: B2 current: %f"), t1_circuit->MeasureCurrent(t1_wire10));
+	}
 }
 
 void ATester::PressedJ()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: J Pressed"));
+	if (t2_circuit) {
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t2_circuit->GetRealTime());
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t2_circuit->GetSimulationTime());
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Real time: %f"), t2_circuit->GetRealTime());
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation time: %f"), t2_circuit->GetSimulationTime());
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current: %f"), t2_circuit->MeasureCurrent(t2_wire1));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire1->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
 
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 current: %f"), t2_circuit->MeasureCurrent(t2_wire1));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire1 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire1->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
-	
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current: %f"), t2_circuit->MeasureCurrent(t2_wire2));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire2->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
-	
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current: %f"), t2_circuit->MeasureCurrent(t2_wire3));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire3->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
-	
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current: %f"), t2_circuit->MeasureCurrent(t2_wire4));
-	UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire4->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
-	
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 current: %f"), t2_circuit->MeasureCurrent(t2_wire2));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire2 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire2->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
+
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 current: %f"), t2_circuit->MeasureCurrent(t2_wire3));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire3 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire3->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
+
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 current: %f"), t2_circuit->MeasureCurrent(t2_wire4));
+		UE_LOG(TesterLog, Warning, TEXT("Tester: Wire4 voltage: %f"), t2_circuit->MeasureVoltage(t2_wire4->GetCircNodeArray()[0], t2_wire1->GetCircNodeArray()[0]));
+	}
 }
 
 void ATester::PressedK()
@@ -492,7 +484,7 @@ void ATester::PressedV()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: V Pressed"));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation serial resistors"));
-	if (t0_circuit->Start(100)) {
+	if (t0_circuit && t0_circuit->Start(100)) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation serial resistors started"));
 	}
 	else {
@@ -504,7 +496,7 @@ void ATester::PressedB()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: B Pressed"));
 	UE_LOG(TesterLog, Warning, TEXT("Tester: Starting simulation schema 1"));
-	if (t1_circuit->Start(100)) {
+	if (t1_circuit && t1_circuit->Start(100)) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation schema 1 started"));
 	}
 	else {
@@ -515,7 +507,7 @@ void ATester::PressedB()
 void ATester::PressedN()
 {
 	UE_LOG(TesterLog, Warning, TEXT("Tester: N Pressed"));
-	if (t2_circuit->Start(100)) {
+	if (t2_circuit && t2_circuit->Start(100)) {
 		UE_LOG(TesterLog, Warning, TEXT("Tester: Simulation wrong component started"));
 	}
 	else {

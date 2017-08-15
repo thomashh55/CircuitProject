@@ -17,12 +17,12 @@ AResistor::AResistor()
 }
 
 // Getters and Setters
-double AResistor::GetResistance()
+float AResistor::GetResistance()
 {
 	return m_resistance;
 }
 
-void AResistor::SetResistance(double resistance)
+void AResistor::SetResistance(float resistance)
 {
 	m_resistance = resistance;
 }

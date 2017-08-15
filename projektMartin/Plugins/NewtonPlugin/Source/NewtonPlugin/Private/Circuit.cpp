@@ -57,8 +57,14 @@ void ACircuit::Tick(float DeltaTime)
 	}
 }
 
+// Initialize NgSpice
+void ACircuit::Init()
+{
+	NgSpice::getInstance().Init();
+}
+
 // Adds component to the circuit
-void ACircuit::AddComponent(AComponent *component)
+void ACircuit::AddComp(AComponent *component)
 {
 	m_componentArray.Add(component);
 	for (ACircNode *node : component->GetCircNodeArray()) {
@@ -67,7 +73,7 @@ void ACircuit::AddComponent(AComponent *component)
 }
 
 // Removes component from the circuit
-void ACircuit::RemoveComponent(AComponent *component)
+void ACircuit::RemoveComp(AComponent *component)
 {
 	m_componentArray.Remove(component);
 
@@ -239,7 +245,7 @@ void ACircuit::FillResults(pvecvaluesall data)
 }
 
 // Measure functions for multimeter
-double ACircuit::MeasureCurrent(AWire *wire, float time) {
+/*float ACircuit::MeasureCurrent(AWire *wire, float time) {
 	if (m_timeArray.Num() == 0) {
 		return 0;
 	}
@@ -249,16 +255,16 @@ double ACircuit::MeasureCurrent(AWire *wire, float time) {
 		}
 	}
 	return wire->GetCurrent(m_timeArray.Num() - 1);
-}
+}*/
 
-double ACircuit::MeasureCurrent(AWire *wire) {
+float ACircuit::MeasureCurrent(AWire *wire) {
 	if (m_timeArray.Num() == 0) {
 		return 0;
 	}
 	return wire->GetCurrent(m_realTimeIndex);
 }
 
-double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time) {
+/*float ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time) {
 	if (m_timeArray.Num() == 0) {
 		return 0;
 	}
@@ -268,9 +274,9 @@ double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, floa
 		}
 	}
 	return circNode1->GetVoltage(m_timeArray.Num() - 1) - circNode2->GetVoltage(m_timeArray.Num() - 1);
-}
+}*/
 
-double ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2) {
+float ACircuit::MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2) {
 	if (m_timeArray.Num() == 0) {
 		return 0;
 	}

@@ -38,36 +38,72 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Initialize NgSpice
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	static void Init();
+	
 	// Create circuit
-	virtual void AddComponent(AComponent *component);
-	virtual void RemoveComponent(AComponent *component);
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	virtual void AddComp(AComponent *component);
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	virtual void RemoveComp(AComponent *component);
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual void AddWire(AWire *wire, ACircNode *circNode1, ACircNode *circNode2);
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual void RemoveWire(AWire *wire);
 
 	// Get array of components and wires
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual TArray<AComponent*> GetComponentArray();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual TArray<AWire*> GetWireArray();
 	
 	// Simulation commands
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual bool Start(float endTime);
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual bool Stop();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual bool Resume();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual bool ForceStop();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual float GetRealTime();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual float GetSimulationTime();
 
 	// Updates results in components
 	virtual void FillResults(pvecvaluesall data);
 
 	// Measure functions for multimeter
-	virtual double MeasureCurrent(AWire *wire, float time);
-	virtual double MeasureCurrent(AWire *wire);
-	virtual double MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time);
-	virtual double MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2);
+	/*UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	virtual float MeasureCurrent(AWire *wire, float time);*/
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	virtual float MeasureCurrent(AWire *wire);
+
+	/*UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	virtual float MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2, float time);*/
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
+	virtual float MeasureVoltage(ACircNode *circNode1, ACircNode *circNode2);
 
 	// Finds error in circuit
 	virtual void FillError(FString error);
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual ACircNode *GetErrorCircNode();
+
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	virtual AWire *GetErrorWire();
 
 	// Debug purpose

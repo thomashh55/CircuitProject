@@ -26,6 +26,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Gets nodes of this component
+	UFUNCTION(BlueprintCallable, Category = "NewtonProject")
 	TArray<ACircNode*> GetCircNodeArray();
 
 	// Getter and setter for component identifier
